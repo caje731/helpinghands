@@ -116,3 +116,26 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/opt/live/static/'
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "bower_components"),
+)
+
+# ======== BOWER ========== 
+INSTALLED_APPS += ('djangobower',)
+STATICFILES_FINDERS += ('djangobower.finders.BowerFinder',)
+BOWER_COMPONENTS_ROOT = BASE_DIR
+
+# Bower does not check for missing dependencies, so make sure requirements
+# are mentioned in the right order.
+# for example Bootstrap requires jQuery, so install jQuery first.
+BOWER_INSTALLED_APPS = (
+    'jquery#2.1.4',
+    'bootstrap#3.3.6',
+    'bootstrap-material-design#0.5.6',
+    'snap.svg#0.4.1'
+)
