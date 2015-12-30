@@ -61,22 +61,6 @@ for (var n = 0; n < 6; n++) {
 	pathSteps[n] = $('.cd-svg-bg').data('step'+(n+1));
 };
 
-modalTrigger =  $('a[data-type="cd-modal-trigger"]');
-modal = $('.cd-modal'), coverLayer = $('.cd-cover-layer');
-
-modalTrigger.on('click', function(event){
-	event.preventDefault();
-	$([modal.get(0), coverLayer.get(0)]).addClass('modal-is-visible');
-	animateModal(paths, pathSteps, duration, 'open');
-});
- 
-modal.on('click', '.modal-close', function(event){
-	event.preventDefault();
-	modal.removeClass('modal-is-visible');
-	coverLayer.removeClass('modal-is-visible');
-	animateModal(paths, pathSteps, duration, 'close');
-});
-
 function animateModal(paths, pathSteps, duration, animationType) {
 	var path1 = ( animationType == 'open' ) ? pathSteps[1] : pathSteps[0],
 		path2 = ( animationType == 'open' ) ? pathSteps[3] : pathSteps[2],
@@ -86,3 +70,22 @@ function animateModal(paths, pathSteps, duration, animationType) {
 	paths[1].animate({'d': path2}, duration, timingFunction);
 	paths[2].animate({'d': path3}, duration, timingFunction);
 }
+
+modalTrigger =  $('a[data-type="cd-modal-trigger"]');
+modal = $('.cd-modal'), coverLayer = $('.cd-cover-layer');
+
+$(document).on('click', 'a[data-type="cd-modal-trigger"]', function(eventObject){
+	modal = $(this).siblings('.cd-modal');
+	coverLayer = $(this).siblings('.cd-cover-layer');
+	$([modal.get(0), coverLayer.get(0)]).addClass('modal-is-visible');
+	animateModal(paths, pathSteps, duration, 'open');
+
+	modal.focus();
+});
+ 
+modal.on('click', '.modal-close', function(event){
+	event.preventDefault();
+	modal.removeClass('modal-is-visible');
+	coverLayer.removeClass('modal-is-visible');
+	animateModal(paths, pathSteps, duration, 'close');
+});
