@@ -26,7 +26,12 @@ SECRET_KEY = '9wxv!i8rtf$te7$ll1gbqk5i@okuw^9slr3a2az2zwe8%1aalo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.get_env() == config.ENV_CODES['DEV']
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'caje731.pythonanywhere.com']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'caje731.pythonanywhere.com',
+    'www.helpinghands.gives'
+]
 
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = "webmaster.hhg@gmail.com"
