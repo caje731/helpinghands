@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = "webmaster.hhg@gmail.com"
 EMAIL_HOST_PASSWORD = os.environ['HH_EMAIL_PASS']
-print EMAIL_HOST_PASSWORD
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # Application definition
@@ -121,7 +120,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/opt/live/static/'
+STATIC_ROOT = '/home/caje731/static/'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',

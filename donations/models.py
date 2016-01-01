@@ -37,7 +37,7 @@ class Profile(models.Model):
         null=True, # Donors will not enter bank details
         blank=True,
     )
-    referrer = models.OneToOneField(
+    referrer = models.ForeignKey(
         'self',
         null=True,
         on_delete=models.SET_NULL,
@@ -72,10 +72,6 @@ class Profile(models.Model):
             if self.is_donor:
                 prefix = 'D'        
             self.registration_id = prefix + today + binascii.hexlify(os.urandom(3))
-            print 'happening'
-        else:
-            print 'not happening'
-
 
         # Call the "real" save() method.
         super(Profile, self).save(*args, **kwargs) 
