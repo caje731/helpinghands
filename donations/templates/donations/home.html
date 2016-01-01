@@ -55,9 +55,43 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-4 col-sm-12"></div>
-			<div class="col-md-4 col-sm-12"></div>
-			<div class="col-md-4 col-sm-12"></div>
+			<div class="col-md-4 col-sm-12">
+				<div class="thumbnail">
+			      
+			      <div class="caption">
+			        <h3>Signup For Recipients</h3>
+			        <!-- <p>Coming soon !</p> -->
+			        <!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
+			      </div>
+			      <img src="{% static "donations/img/coming-soon.jpg" %}" alt="Coming Soon">
+			    </div>
+			</div>
+			<div class="col-md-4 col-sm-12">
+				<ul class="">
+				  <li class="list-group-item">
+				  	Donors Registered<span class="badge">{{ donor_total_count }}</span>
+				  </li>
+				  <li class="list-group-item">
+				  	Cases Registered<span class="badge">{{ donee_total_count }}</span>
+				  </li>
+				  <li class="list-group-item">
+				  	Cases Served<span class="badge">0</span>
+				  </li>
+				  <li class="list-group-item">
+				  	Cases Rejected<span class="badge">0</span>
+				  </li>
+				</ul>
+			</div>
+			<div class="col-md-4 col-sm-12">
+				<a href="/donor/">
+					<div class="thumbnail">
+				      <div class="caption">
+				        <h3>Donor Signup</h3>
+				      </div>
+				      <img src="{% static "donations/img/helping-others.jpg" %}" alt="Donor Signup">
+				    </div>
+				</a>
+			</div>
 		</div>
 	</div>
 

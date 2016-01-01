@@ -1,0 +1,17 @@
+Welcome aboard, {{ name }}!
+Let us tell you that you've taken a great step towards helping people.
+You'll find details below for logging in to your account at
+www.helpinghands.gives
+
+Registration ID : {{ registration_id }}
+Username : {{username}}
+Password : {{password}}
+	
+Please log in to your account and change your password.
+Also remember to complete your profile information.
+
+Once again, thanks for registering on our platform.
+In case you have any concerns/issues, feel free to reply to this email.
+We're real, live humans, listening to what you have to say.
+
+The HelpingHands Team.

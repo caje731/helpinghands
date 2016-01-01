@@ -3,11 +3,17 @@ from __future__ import unicode_literals
 from django.db import models
 from helpinghands import settings
 
+import os, datetime, binascii
 # Create your models here.
 
 class Profile(models.Model):
     """ Extension of the auth.User model """
-    
+
+    registration_id = models.CharField(
+        'Registration ID',
+        max_length=255,
+        unique=True,
+    )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
@@ -16,37 +22,64 @@ class Profile(models.Model):
     address = models.OneToOneField(
         'Address',
         null=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
+        blank=True,
     )
     work = models.OneToOneField(
         'WorkDetail',
         null=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
+        blank=True,
     )
     bank_details = models.OneToOneField(
         'BankDetail',
         on_delete=models.SET_NULL,
-        null=True # Donors will not enter bank details
+        null=True, # Donors will not enter bank details
+        blank=True,
     )
     referrer = models.OneToOneField(
-        'Referrer',
+        'self',
+        null=True,
         on_delete=models.SET_NULL,
-        null=True # Only donees can be referred by some person
+        blank=True,
     )
-    cell_phone = models.CharField(max_length=255)
+    cell_phone = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+    )
     res_phone = models.CharField(
         verbose_name='Residence Phone',
         max_length=255,
-        null=True # Not everyone may have a residential phone
+        null=True, # Not everyone may have a residential phone
+        blank=True,
     )
     case_details = models.OneToOneField(
         'CaseDetail',
         on_delete=models.SET_NULL,
-        null=True # Cases only belong to donees
+        null=True, # Cases only belong to donees
+        blank=True,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        """ Override the save method to update the registration_id """
+
+        if self.registration_id is None or self.registration_id == '':
+            today = datetime.date.today().strftime('%Y%m%d')
+            prefix = 'R'
+            if self.is_donor:
+                prefix = 'D'        
+            self.registration_id = prefix + today + binascii.hexlify(os.urandom(3))
+            print 'happening'
+        else:
+            print 'not happening'
+
+
+        # Call the "real" save() method.
+        super(Profile, self).save(*args, **kwargs) 
+        
 class Address(models.Model):
     """ Residential Address details for each user """
 
@@ -68,15 +101,6 @@ class WorkDetail(models.Model):
     designation = models.CharField(max_length=255)
     phone = models.CharField(verbose_name='Office Phone', max_length=255)
     email = models.EmailField(verbose_name='Office Email')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-class Referrer(models.Model):
-    """ Referrer details, applicable in case of Donee """
-
-    name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=255)
-    email = models.EmailField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

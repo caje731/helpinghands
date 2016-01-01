@@ -26,9 +26,14 @@ SECRET_KEY = '9wxv!i8rtf$te7$ll1gbqk5i@okuw^9slr3a2az2zwe8%1aalo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.get_env() == config.ENV_CODES['DEV']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = "webmaster.hhg@gmail.com"
+EMAIL_HOST_PASSWORD = os.environ['HH_EMAIL_PASS']
+print EMAIL_HOST_PASSWORD
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -137,5 +142,6 @@ BOWER_INSTALLED_APPS = (
     'jquery#2.1.4',
     'bootstrap#3.3.6',
     'bootstrap-material-design#0.5.6',
-    'snap.svg#0.4.1'
+    'snap.svg#0.4.1',
+    'animate.css#3.2.3'
 )

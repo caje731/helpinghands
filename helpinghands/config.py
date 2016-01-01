@@ -27,7 +27,7 @@ def get_db_settings():
         return {
             'default': {
                 'ENGINE': 'django.db.backends.mysql',
-                'NAME': 'helpinghands',
+                'NAME': 'caje731$helpinghands',
                 'USER': 'caje731',
                 'PASSWORD': 'caje731',
                 'HOST': 'caje731.mysql.pythonanywhere-services.com',
