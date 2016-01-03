@@ -27,8 +27,9 @@ $('.help').popover();
 
 // Show the Terms and Conditions page if required
 $('a.tnc_link').click(function(eventObject){
-    window.open(window.location.origin + '#TOU');
+    window.open(window.location.protocol + '//' + window.location.host + '#TOU');
 });
+
 // Handle the form submit action
 $('.submit').click(function() {
     event.preventDefault();
