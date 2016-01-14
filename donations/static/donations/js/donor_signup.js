@@ -42,11 +42,11 @@ $('.submit').click(function() {
       opacity: 0.8
     }, "fast");
     
-    // Show the thanks button
-    $('.thanks').removeClass('hide').addClass('fadeInDownBig');
     
     // Submit the form data
-    $.ajax('.', {
+    $.ajax(
+      '.',
+      {
         type : 'POST',
         headers: { 'X-CSRFToken' : csrftoken },
         data: {
@@ -55,7 +55,19 @@ $('.submit').click(function() {
           'email': $('.answer3')[0].innerHTML,
           'phone': $('.answer4')[0].innerHTML,
           'ref_id': $('.answer5')[0].innerHTML
+        },
+        beforeSend: function( jqXHR, settingsObj ){
+          $('.processing').removeClass('hide').addClass('fadeInDownBig');
+        },
       }
+    )
+    .done(function(data, status, jqXHR){
+      $('.processing').addClass('hide').addClass('fadeInDownBig');
+      // Show the thanks button
+      $('.thanks').removeClass('hide').addClass('fadeInDownBig');
+    })
+    .fail(function(jqxhr, status, errorThrown){
+      $('.failure').children(r'h1').innerHTML = errorThrown
     });
 });
 

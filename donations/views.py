@@ -1,5 +1,7 @@
 """ Views for my precious """
 
+import json
+
 from django.shortcuts import render
 from django.views.generic import View
 from django.contrib.auth.models import User
@@ -42,6 +44,29 @@ class DonorView(View):
         ref_id = request.POST['ref_id']
         phone =  request.POST['phone']
 
+        referrer = None
+        try:
+            referrer = Profile.objects.get(registration_id=ref_id)
+        except Profile.DoesNotExist:
+            return HttpResponse(
+                json.dumps({
+                    'status': 'failure',
+                    'message': 'Referrer ID is invalid'
+                }),
+                content_type='application/json',
+                status=400
+            )
+
+        if User.objects.filter(email=email).exists():
+            return HttpResponse(
+                json.dumps({
+                    'status': 'failure',
+                    'message': 'A profile with the same email already exists'
+                }),
+                content_type='application/json',
+                status=400
+            )
+
         usr = User.objects.create_user(
             email, # username 
             email,
@@ -53,13 +78,13 @@ class DonorView(View):
         p = Profile(
             user=usr,
             is_donor=True,
-            referrer=Profile.objects.get(registration_id=ref_id),
+            referrer=referrer,
             cell_phone=phone,
         )
         p.save()
 
         subject = "Welcome to HelpingHands"
-        from_email = "webmaster@helpinghands.com"
+        from_email = "webmaster@helpinghands.gives"
         to_email = email
         
         context = {
