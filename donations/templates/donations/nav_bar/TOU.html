@@ -1,10 +1,8 @@
-{% extends "donations/modalSVG.html" %}
-{% block modalSVG_tag %}TOU{% endblock %}
-{% block modalSVG_id %}TOU{% endblock %}
-{% block modalSVG_linklabel %}Terms Of Use{% endblock %}
-{% block modalSVG_title %}Terms Of Use{% endblock %}
+{% extends "donations/base.html" %}
+{% block title %}Terms Of Use | helpinghands.gives{% endblock %}
 
-{% block modalSVG_content %}
+{% block content %}
+<div class="well">
 <div class="page-header">
   <h1>Terms of Use</h1>
 </div>
@@ -216,5 +214,7 @@ In accordance with Information Technology Act 2000 and rules made there under, t
 
 <br>Cajetan Rodrigues
 <br>Email: grievance@helpinghands.gives
+
+</div>
 
 {% endblock %}

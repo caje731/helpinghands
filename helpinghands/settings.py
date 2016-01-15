@@ -147,5 +147,6 @@ BOWER_INSTALLED_APPS = (
     'bootstrap#3.3.6',
     'bootstrap-material-design#0.5.6',
     'snap.svg#0.4.1',
-    'animate.css#3.2.3'
+    'animate.css#3.2.3',
+    'jquery-validation#1.14.0',
 )

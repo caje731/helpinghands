@@ -12,7 +12,7 @@
     <link href="{% static "bootstrap/dist/css/bootstrap.min.css" %}" rel="stylesheet">
 
     <!-- Material Design fonts -->
-	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+	  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
   	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   	<!-- Bootstrap Material Design -->
@@ -31,6 +31,36 @@
     <![endif]-->
   </head>
   <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-home" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navbar-collapse-home">
+          <ul class="nav navbar-nav">
+            <li><a href="/about/">About Us</a></li>
+            <li><a href="/faq/">FAQ</a></li>
+            <li><a href="/people/">The Team</a></li>
+            <li><a href="/tou/">Terms Of Use</a></li>
+            <li><a href="/privacy/">Privacy Policy</a></li>
+            <li><a href="/external/">Helpful Links</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <!-- <li><a id="a_contact" href="#">Contact Us</a></li>
+            <li><a id="a_getinvolved" href="#">Get Involved</a></li> -->
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+  </nav>
 	{% block content %} {% endblock %}
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{% static "jquery/dist/jquery.min.js" %}"></script>
@@ -40,6 +70,22 @@
     <script src="{% static "bootstrap-material-design/dist/js/ripples.min.js" %}"></script>
     <script type="text/javascript">
     	$.material.init();
+      // using jQuery
+      function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie != '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                  var cookie = jQuery.trim(cookies[i]);
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
 	</script>
 	{% block scripts %} {% endblock %}
   </body>

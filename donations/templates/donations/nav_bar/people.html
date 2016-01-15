@@ -1,15 +1,12 @@
-{% extends "donations/modalSVG.html" %}
+{% extends "donations/base.html" %}
 {% load static from staticfiles %}
 
-{% block modalSVG_linklabel %}People{% endblock %}
-{% block modalSVG_tag %}people{% endblock %}
-{% block modalSVG_id %}people{% endblock %}
-{% block modalSVG_title %}People{% endblock %}
+{% block title %}People | helpinghands.gives{% endblock %}
 
-{% block modalSVG_content %}
-
+{% block content %}
+<div class="well">
 <div class="page-header">
-  <h1>Meet The Team!</h1>
+  <h1 class='text-center'>Meet The Team!</h1>
 </div>
 <h3 class="text-center">FOUNDERS</h3>
 <hr>
@@ -179,6 +176,8 @@
 		</figure>
 	</div>
 </div>
+</div>
+
 
 {% endblock %}
 

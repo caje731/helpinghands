@@ -5,7 +5,7 @@ import json
 from django.shortcuts import render
 from django.views.generic import View
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
@@ -17,7 +17,7 @@ def home(request):
 
     return render(
         request,
-        'donations/home.html',
+        'donations/nav_bar/home.html',
         {
             'donor_total_count': Profile.objects.filter(is_donor=True).count(),
             'donee_total_count': Profile.objects.filter(is_donor=False).count(),
@@ -48,23 +48,21 @@ class DonorView(View):
         try:
             referrer = Profile.objects.get(registration_id=ref_id)
         except Profile.DoesNotExist:
-            return HttpResponse(
-                json.dumps({
+            return JsonResponse(
+                {
                     'status': 'failure',
                     'message': 'Referrer ID is invalid'
-                }),
-                content_type='application/json',
-                status=400
+                },
+                status=400,
             )
 
         if User.objects.filter(email=email).exists():
-            return HttpResponse(
-                json.dumps({
+            return JsonResponse(
+                {
                     'status': 'failure',
                     'message': 'A profile with the same email already exists'
-                }),
-                content_type='application/json',
-                status=400
+                },
+                status=400,
             )
 
         usr = User.objects.create_user(
@@ -93,12 +91,23 @@ class DonorView(View):
             'password': email,
             'registration_id': p.registration_id,
         }
-        msg_plain = render_to_string('donations/welcome_donor.txt', context)
-        msg_html = render_to_string('donations/welcome_donor.html', context)
-        
+        msg_plain = render_to_string(
+            'donations/email/welcome_donor.txt',
+            context
+        )
+        msg_html = render_to_string(
+            'donations/email/welcome_donor.html',
+            context
+        )
+
         msg = EmailMultiAlternatives(subject, msg_plain, from_email, [to_email])
         msg.attach_alternative(msg_html, "text/html")
         msg.send()
         
-        return HttpResponse('success')
+        return JsonResponse(
+            {
+                'status': 'success',
+                'message': 'Profile successfully created'
+            }
+        )
 
