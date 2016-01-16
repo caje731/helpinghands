@@ -42,7 +42,7 @@
 	<div class="form-group">
 		<div class="checkbox">
           <label>
-            <input required type="checkbox"> I have read and understood the website 
+            <input required id="check_tnc" type="checkbox"> I have read and understood the website 
             <a href="/tou/" target="_blank">Terms and Conditions</a>
           </label>
 	</div>
@@ -76,6 +76,16 @@
 <script src="{% static "jquery-validation/dist/jquery.validate.min.js" %}"></script>
 <script type="text/javascript">
 	var csrftoken = getCookie('csrftoken');
+	$('#btnSubmit').hide();	
+	$("#check_tnc").click(function(eventObject) {
+		if($("#check_tnc").is(':checked')){
+			$('#btnSubmit').show();
+		}
+		else{
+			$('#btnSubmit').hide();	
+		}
+	});
+
 	$('#btnSubmit').click(function(eventObject){
 		console.log('asdf');
 		$('#form').validate();

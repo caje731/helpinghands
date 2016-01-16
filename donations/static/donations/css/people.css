@@ -4,14 +4,15 @@ figure.snip1091 {
   position: relative;
   /*float: left;*/
   /*margin: 10px 1%;*/
-  min-width: 256px;
-  max-width: 256px;
-  max-height: 256px;
+  min-width: 180px;
+  max-width: 180px;
+  max-height: 180px;
   width: 100%;
   overflow: hidden;
   text-align: center;
   background: #000000;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
 }
 
 figure.snip1091 * {
@@ -21,10 +22,11 @@ figure.snip1091 * {
 
 figure.snip1091 img {
   opacity: 0.25;
-  height: 256px;
+  height: 180px;
   position: relative;
   top: 0;
   left: 0;
+  border-radius: 10px;
 }
 
 figure.snip1091 figcaption {
@@ -42,14 +44,14 @@ figure.snip1091 figcaption h2 {
   top: 50%;
   letter-spacing: -1px;
   color: #ffffff;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   padding: 10px 0;
   margin: 0;
   font-weight: 400;
 }
 
 figure.snip1091 figcaption h2 span {
-  font-weight: 800;
+  font-weight: 400;
 }
 
 figure.snip1091 figcaption:before,
@@ -119,4 +121,9 @@ figure.snip1091.hover figcaption:before,
 figure.snip1091:hover figcaption:after,
 figure.snip1091.hover figcaption:after {
   width: 200%;
+}
+
+hr {
+  height: 20px;
+  background-color: #009688;
 }
