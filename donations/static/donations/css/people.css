@@ -1,4 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway:400,800);
+hr {
+  border-radius: 15px;
+}
 figure.snip1091 {
   font-family: 'Raleway', Arial, sans-serif;
   position: relative;
