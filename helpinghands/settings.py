@@ -149,4 +149,5 @@ BOWER_INSTALLED_APPS = (
     'snap.svg#0.4.1',
     'animate.css#3.2.3',
     'jquery-validation#1.14.0',
+    'snackbarjs#1.0.0',
 )

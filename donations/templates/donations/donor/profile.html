@@ -1,0 +1,100 @@
+{% load static from staticfiles %}
+<div class="well">
+	<div class="page-header">
+		<h3 class="text-center">Account Details</h3>
+	</div>
+	 
+	<form id="form" class="form-horizontal">
+	{% csrf_token %}
+	
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="ref_id">Referral ID</label>
+	  <div class="col-md-10">
+	  	<input type="text" disabled value="{{ request.user.profile.registration_id }}">
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="first_name">Username</label>
+	  <div class="col-md-10">
+	  	<input disabled type="text" value="{{ request.user.username }}">
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="first_name">First Name</label>
+	  <div class="col-md-10">
+	  	<input required class="form-control input-lg" id="first_name" type="text" value="{{ request.user.first_name }}">
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="last_name">Last Name</label>
+	  <div class="col-md-10">
+	  	<input required class="form-control input-lg" id="last_name" type="text" value="{{ request.user.last_name }}">
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="phone">Phone Number</label>
+	  <div class="col-md-10">
+	  	<input class="form-control input-lg" id="phone" type="text" value="{{ request.user.profile.cell }}">
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <div class="col-md-10 col-md-offset-2">
+	    <button type="button" class="btn btn-primary" id="btnSubmit" data-loading-text="Updating...">Update Profile</button>
+	    <a class="btn btn-default pull-right" href="{% url 'password_reset' %}">Reset password</a>
+	  </div>
+	</div>
+	</form>
+</div>
+
+{% block scripts %}
+<script src="{% static "jquery-validation/dist/jquery.validate.min.js" %}"></script>
+<script type="text/javascript">
+	var csrftoken = getCookie('csrftoken');
+	
+	$('#btnSubmit').click(function(eventObject){
+		
+		$('#form').validate();
+		if ($('#form').valid()){
+			// Submit the form data
+		    $.ajax(
+		      {
+		      	url: "/accounts/profile/",
+		      	type: "PATCH",
+		        headers: { 'X-CSRFToken' : csrftoken },
+		        data: {
+		          'first_name': $('#first_name')[0].value,
+		          'last_name': $('#last_name')[0].value,
+		          'phone': $('#phone')[0].value,
+		        },
+		        beforeSend: function( jqXHR, settingsObj ){
+		          // Send the submit button into 'loading' state
+		          $('#btnSubmit').button('loading');
+		        },
+		      }
+		    )
+		    .done(function(data, status, jqXHR){
+		      $.snackbar({
+		      	content: "Profile Updated Successfully!",
+		      	style: "toast",
+		      	timeout: 1000 // disappear in milliseconds
+		      });
+		    })
+		    .fail(function(jqxhr, status, errorThrown){
+		      $.snackbar({
+		      	content: "Something went wrong!",
+		      	style: "toast",
+		      	timeout: 1000 // disappear in milliseconds
+		      });
+		    })
+		    .always(function(){
+		    	$('#btnSubmit').button('reset');
+		    });	
+		}
+	});
+</script>
+{% endblock %}

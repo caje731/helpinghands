@@ -1,0 +1,59 @@
+{% extends "donations/base.html" %}
+{% load static from staticfiles %}
+
+{% block title %} My Account | helpinghands.gives{% endblock %}
+
+{% block content %}
+<div class="row">
+	<!-- The side navigation pills -->
+	<div class="col-md-3">
+		<div class="panel">
+			<!-- Nav tabs -->
+			  <ul class="nav nav-pills nav-stacked" role="tablist">
+			    
+			    <li role="presentation" class="active">
+			    	<a href="#cases" aria-controls="cases" role="tab" data-toggle="pill">
+			    		<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+			    		All Cases
+			    	</a>
+			    </li>
+			    
+			    <li role="presentation">
+			    	<a href="#conv" aria-controls="conversations" role="tab" data-toggle="pill">
+			    		<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+			    		My Conversations
+			    	</a>
+			    </li>
+			    
+			    <li role="presentation">
+			    	<a href="#profile" aria-controls="profile" role="tab" data-toggle="pill">
+			    		<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+			    		My Account
+			    	</a>
+			    </li>
+
+			    <li role="presentation">
+			    	<a href="/accounts/logout/">
+			    		<span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+			    		Logout
+			    	</a>
+			    </li>
+			  </ul>
+		</div>
+	</div>
+	<div class="col-md-9">
+		 <!-- Tab panes -->
+		  <div class="tab-content">
+		    <div role="tabpanel" class="tab-pane active in" id="cases">
+		    	You can see all registered cases here.
+		    </div>
+		    <div role="tabpanel" class="tab-pane fade" id="conv">
+		    	You can see a historical list of all your case-conversations here.
+		    </div>
+		    <div role="tabpanel" class="tab-pane fade" id="profile">
+		    	{% include "donations/donor/profile.html" %}
+		    </div>
+		  </div>
+	</div>
+</div>
+{% endblock %}

@@ -87,13 +87,13 @@
 	});
 
 	$('#btnSubmit').click(function(eventObject){
-		console.log('asdf');
+		
 		$('#form').validate();
 		if ($('#form').valid()){
 			// Submit the form data
 		    $.ajax(
 		      {
-		      	url: "/donor/",
+		      	url: "/donor/signup/",
 		      	type: "POST",
 		        headers: { 'X-CSRFToken' : csrftoken },
 		        data: {

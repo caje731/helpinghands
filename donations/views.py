@@ -5,7 +5,9 @@ import json
 from django.shortcuts import render
 from django.views.generic import View
 from django.contrib.auth.models import User
-from django.http import HttpResponse, JsonResponse
+from django.contrib.auth import logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse, JsonResponse, QueryDict
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
@@ -24,7 +26,14 @@ def home(request):
         },
     )
 
-class DonorView(View):
+def logout_view(request):
+    """ Logout the current user and redirect to the home page """
+    logout(request)
+    # Redirect to a success page.
+
+    return home(request)
+
+class DonorSignupView(View):
     """ View for accessing/creating Donor """
 
     def get(self, request, *args, **kwargs):
@@ -32,7 +41,7 @@ class DonorView(View):
 
         return render(
             request,
-            'donations/donor_signup.html'
+            'donations/donor/signup.html'
         )
 
     def post(self, request, *args, **kwargs):
@@ -82,7 +91,7 @@ class DonorView(View):
         p.save()
 
         subject = "Welcome to HelpingHands"
-        from_email = "webmaster@helpinghands.gives"
+        from_email = "www.helpinghands.gives<webmaster@helpinghands.gives>"
         to_email = email
         
         context = {
@@ -111,3 +120,59 @@ class DonorView(View):
             }
         )
 
+class ProfileView(LoginRequiredMixin, View):
+    login_url = "/accounts/login/"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.profile.is_donor:
+            return render(
+                request,
+                'donations/donor/logged_in.html',
+            )
+
+    def patch(self, request, *args, **kwargs):
+        """ Update user details """
+
+        data = QueryDict(request.body)
+
+        first_name = data['first_name']
+        last_name = data['last_name']
+        phone =  data['phone']
+
+        if first_name is not None and len(first_name) > 0:
+            if request.user.first_name != first_name:
+                request.user.first_name = first_name
+                request.user.save()
+        else:
+            return JsonResponse(
+                {
+                    'status': 'failure',
+                    'message': 'First Name cannot be blank'
+                },
+                status=400,
+            )
+
+        if last_name is not None and len(last_name) > 0:
+            if request.user.last_name != last_name:
+                request.user.last_name = last_name
+                request.user.save()
+        else:
+            return JsonResponse(
+                {
+                    'status': 'failure',
+                    'message': 'Last Name cannot be blank'
+                },
+                status=400,
+            )
+
+        if phone is not None and len(phone) > 0:
+            if request.user.profile.cell_phone != phone:
+                request.user.profile.cell_phone = phone
+                request.user.profile.save()
+        
+        return JsonResponse(
+            {
+                'status': 'success',
+                'message': 'Profile successfully updated'
+            }
+        )
