@@ -18,12 +18,11 @@
   	<!-- Bootstrap Material Design -->
   	<link href="{% static "bootstrap-material-design/dist/css/bootstrap-material-design.css" %}" rel="stylesheet">
   	<link href="{% static "bootstrap-material-design/dist/css/ripples.min.css" %}" rel="stylesheet">
-    
-    <link href="{% static "donations/css/modalSVG.css" %}" rel="stylesheet">
-    <link href="{% static "donations/css/people.css" %}" rel="stylesheet">
     <link href="{% static "snackbarjs/dist/snackbar.min.css" %}" rel="stylesheet">
-
+    <link href="{% static "donations/css/people.css" %}" rel="stylesheet">
+    
     {% block styles %} {% endblock %}
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -32,13 +31,7 @@
     <![endif]-->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{% static "jquery/dist/jquery.min.js" %}"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
-    <script src="{% static "bootstrap-material-design/dist/js/material.min.js" %}"></script>
-    <script src="{% static "bootstrap-material-design/dist/js/ripples.min.js" %}"></script>
-    <script src="{% static "snackbarjs/dist/snackbar.min.js" %}"></script>
     <script type="text/javascript">
-      $.material.init();
       // using jQuery
       function getCookie(name) {
           var cookieValue = null;
@@ -91,7 +84,15 @@
       </div><!-- /.container-fluid -->
   </nav>
 	{% block content %} {% endblock %}
-    
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "bootstrap-material-design/dist/js/material.min.js" %}"></script>
+    <script src="{% static "bootstrap-material-design/dist/js/ripples.min.js" %}"></script>
+    <script src="{% static "snackbarjs/dist/snackbar.min.js" %}"></script>
+    <script type="text/javascript">
+      $.material.options.autofill = true;
+      $.material.init();
+    </script> 
 	{% block scripts %} {% endblock %}
   </body>
 </html>
