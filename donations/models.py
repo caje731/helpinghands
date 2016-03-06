@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.db.models import Sum
 from helpinghands import settings
 
 import os, datetime, binascii
@@ -16,27 +17,10 @@ class Profile(models.Model):
     )
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        blank=True
     )
     is_donor = models.BooleanField()
-    address = models.OneToOneField(
-        'Address',
-        null=True,
-        on_delete=models.SET_NULL,
-        blank=True,
-    )
-    work = models.OneToOneField(
-        'WorkDetail',
-        null=True,
-        on_delete=models.SET_NULL,
-        blank=True,
-    )
-    bank_details = models.OneToOneField(
-        'BankDetail',
-        on_delete=models.SET_NULL,
-        null=True, # Donors will not enter bank details
-        blank=True,
-    )
     referrer = models.ForeignKey(
         'self',
         null=True,
@@ -46,12 +30,6 @@ class Profile(models.Model):
     cell_phone = models.CharField(
         max_length=255,
         null=True,
-        blank=True,
-    )
-    res_phone = models.CharField(
-        verbose_name='Residence Phone',
-        max_length=255,
-        null=True, # Not everyone may have a residential phone
         blank=True,
     )
     case_details = models.OneToOneField(
@@ -76,9 +54,30 @@ class Profile(models.Model):
         # Call the "real" save() method.
         super(Profile, self).save(*args, **kwargs) 
         
-class Address(models.Model):
-    """ Residential Address details for each user """
+class Contact(models.Model):
+    """ Contact details for each case """
 
+    phone = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+    email = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+    address = models.OneToOneField(
+        'Address',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Address(models.Model):
+    """ Details of residential address """
     house_name = models.CharField(max_length=255)
     street = models.CharField(max_length=255)
     area = models.CharField(max_length=255)
@@ -126,8 +125,7 @@ class CaseDetail(models.Model):
     REASON_CHOICES = (
         (1, 'Medical/Health'),
         (2, 'Education'),
-        (3, 'Support due to loss of parent(s)'),
-        (4, 'Other (please mention the reason)'),
+        (3, 'Other'),
     )
 
     CASE_STATUS_CHOICES = (
@@ -137,13 +135,50 @@ class CaseDetail(models.Model):
         (4, 'Rejected'),
         (5, 'Closed')
     )
-    
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    contact = models.OneToOneField(
+        'Contact',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
     reason = models.PositiveSmallIntegerField(choices=REASON_CHOICES, default=1)
-    reason_phrase = models.CharField(max_length=255, blank=True)
-    brief = models.CharField(verbose_name="Brief of the case", max_length=255)
+    brief = models.TextField(verbose_name="Short Description")
+    wish_amount = models.FloatField(default=0)
     status = models.PositiveSmallIntegerField(
         choices=CASE_STATUS_CHOICES,
         default=1
     )
+    address = models.OneToOneField(
+        'Address',
+        null=True,
+        on_delete=models.SET_NULL,
+        blank=True,
+    )
+    work = models.OneToOneField(
+        'WorkDetail',
+        null=True,
+        on_delete=models.SET_NULL,
+        blank=True,
+    )
+    bank_details = models.OneToOneField(
+        'BankDetail',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def pledge_total(self):
+        """ Get the total amount pledged for this case """
+        return CasePledge.objects.filter(case=self).aggregate(Sum('amount'))
+
+class CasePledge(models.Model):
+    """ All pledges for a case """
+    amount = models.FloatField(default=0)
+    case = models.ForeignKey(CaseDetail)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

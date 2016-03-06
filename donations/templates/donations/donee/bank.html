@@ -1,0 +1,121 @@
+{% load static from staticfiles %}
+<div class="well">
+	<div class="page-header">
+		<h3 class="text-center">My Bank Details</h3>	
+	</div>
+	 
+	{% if not request.user.profile.bank_details or request.user.profile.case_details.status == 1 %}
+	<form id="form" class="form-horizontal">
+	{% csrf_token %}
+	
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="acc_holder_name">Account Holder's Name </label>
+	  <div class="col-md-10">
+	  	<input class="form-control" type="text" id="acc_holder_name" value="{{ request.user.profile.bank_details.acc_holder_name }}">
+	  </div>
+	</div>
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="acc_number">Account Number </label>
+	  <div class="col-md-10">
+	  	<input class="form-control" type="text" id="acc_number" value="{{ request.user.profile.bank_details.acc_number }}">
+	  </div>
+	</div>
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="bank_name">Bank Name </label>
+	  <div class="col-md-10">
+	  	<input class="form-control" type="text" id="bank_name" value="{{ request.user.profile.bank_details.bank_name }}">
+	  </div>
+	</div>
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="branch_name">Branch Name </label>
+	  <div class="col-md-10">
+	  	<input class="form-control" type="text" id="branch_name" value="{{ request.user.profile.bank_details.branch_name }}">
+	  </div>
+	</div>
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="ifsc">IFSC </label>
+	  <div class="col-md-10">
+	  	<input class="form-control" type="text" id="ifsc" value="{{ request.user.profile.bank_details.ifsc }}">
+	  </div>
+	</div><!-- 
+	<div class="form-group">
+		<label class="control-label col-md-2" for="cheque_copy">Cheque Copy</label>
+		<div class="col-md-10">
+			<input type="file" id="cheque_copy" multiple="">
+			  <div class="input-group">
+			    <input type="text" readonly="" class="form-control" placeholder="Upload a cheque leaf copy">
+			      <span class="input-group-btn input-group-sm">
+			        <button type="button" class="btn btn-fab btn-fab-mini">
+			          <i class="material-icons">attach_file</i>
+			        </button>
+			      </span>
+			  </div>
+		 </div>
+	</div> -->
+	<div class="form-group">
+	  <div class="col-md-10 col-md-offset-2">
+	    <button type="button" class="btn btn-primary" id="btnSubmitBank" data-loading-text="Updating...">Update Case</button>
+	  </div>
+	</div>
+	</form>
+	{% else %}
+	<p>You cannot edit your bank details since it is {{ request.user.profile.case_details.status }}</p>
+	<p>Account Holder Name: {{ request.user.profile.bank_details.acc_holder_name }}</p>
+	<p>Account Number: {{ request.user.profile.bank_details.acc_number }}</p>
+	<p>Bank Name: {{ request.user.profile.bank_details.bank_name }}</p>
+	<p>Branch Name: {{ request.user.profile.bank_details.branch_name }}</p>
+	<p>IFSC: {{request.user.profile.bank_details.ifsc}}</p>
+	<!-- <img src="{{request.user.profile.bank_details.cheque_copy}}"/> -->
+	{% endif %}
+</div>
+
+{% block scripts %}
+<script src="{% static "jquery-validation/dist/jquery.validate.min.js" %}"></script>
+<script type="text/javascript">
+	var csrftoken = getCookie('csrftoken');
+	
+	$('#btnSubmitBank').click(function(eventObject){
+		$('#form').validate();
+		if ($('#form').valid()){
+			// Submit the form data
+		    $.ajax(
+		      {
+		      	url: "/accounts/profile/",
+		      	type: "PATCH",
+		        headers: { 'X-CSRFToken' : csrftoken },
+		        data: {
+		        	'patch_type': 'bank',
+		          	'acc_holder_name': $('#acc_holder_name')[0].value || null,
+		          	'acc_number': $('#acc_number')[0].value || null,
+		          	'bank_name': $('#bank_name')[0].value || null,
+		          	'branch_name': $('#branch_name')[0].value || null,
+		          	'ifsc': $('#ifsc')[0].value || null,
+		          	// 'cheque_copy': $('#cheque_copy')[0].value || null,
+		        },
+		        beforeSend: function( jqXHR, settingsObj ){
+		          // Send the submit button into 'loading' state
+		          $('#btnSubmit').button('loading');
+		        },
+		      }
+		    )
+		    .done(function(data, status, jqXHR){
+		      $.snackbar({
+		      	content: "Profile Updated Successfully!",
+		      	style: "toast",
+		      	timeout: 2000 // disappear in milliseconds
+		      });
+		    })
+		    .fail(function(jqxhr, status, errorThrown){
+		      $.snackbar({
+		      	content: jqxhr.responseJSON.message,
+		      	style: "toast",
+		      	timeout: 2000 // disappear in milliseconds
+		      });
+		    })
+		    .always(function(){
+		    	$('#btnSubmit').button('reset');
+		    });	
+		}
+	});
+</script>
+{% endblock %}

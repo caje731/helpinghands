@@ -3,3 +3,4 @@ from donations.models import *
 # Register your models here.
 
 dca.site.register(Profile)
+dca.site.register(CaseDetail)

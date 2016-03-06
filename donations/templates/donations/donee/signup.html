@@ -1,0 +1,130 @@
+{% extends "donations/base.html" %}
+{% load static from staticfiles %}
+
+{% block title %}Recipient Signup | helpinghands.gives{% endblock %}
+
+{% block content %}
+<div class="well col-md-8 col-md-offset-2">
+	<div class="page-header">
+		<h1>Please fill the form below:</h1>
+	</div>
+	<form id="form">
+	{% csrf_token %}
+	
+	<div class="form-group label-floating">
+	  <label class="control-label" for="ref_id">Referral ID</label>
+	  <input required class="form-control input-lg" id="ref_id" type="text">
+	  <p class="help-block">You should have received this by someone who's already registered with us</p>
+	</div>
+
+	<div class="form-group label-floating">
+	  <label class="control-label" for="first_name">First Name</label>
+	  <input required class="form-control input-lg" id="first_name" type="text">
+	</div>
+
+	<div class="form-group label-floating">
+	  <label class="control-label" for="last_name">Last Name</label>
+	  <input required class="form-control input-lg" id="last_name" type="text">
+	</div>
+
+	<div class="form-group label-floating">
+      <label for="email" class="control-label">Your Email Address</label>
+      <input required type="email" class="form-control" id="email">
+      <p class="help-block">We shall use this address for our future correspondence</p>
+    </div>
+	    
+	<div class="form-group label-floating">
+	  <label class="control-label" for="phone">Phone Number</label>
+	  <input required class="form-control input-lg" id="phone" type="text">
+	  <p class="help-block">We may contact you as part of our verification procedure</p>
+	</div>
+
+	
+
+	<div class="form-group">
+		<div class="checkbox">
+          <label>
+            <input required id="check_tnc" type="checkbox"> I have read and understood the website 
+            <a href="/tou/" target="_blank">Terms and Conditions</a>
+          </label>
+	</div>
+
+	<div class="form-group">
+	  <div class="col-md-10 col-md-offset-2">
+	    <button type="button" class="btn btn-primary" id="btnSubmit" data-loading-text="Submitting...">Submit</button>
+	  </div>
+	</div>
+	</form>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title"></h4>
+	      </div>
+	      <div class="modal-body">
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static "jquery-validation/dist/jquery.validate.min.js" %}"></script>
+<script type="text/javascript">
+	var csrftoken = getCookie('csrftoken');
+	$('#btnSubmit').hide();	
+	$("#check_tnc").click(function(eventObject) {
+		if($("#check_tnc").is(':checked')){
+			$('#btnSubmit').show();
+		}
+		else{
+			$('#btnSubmit').hide();	
+		}
+	});
+
+	$('#btnSubmit').click(function(eventObject){
+		
+		$('#form').validate();
+		if ($('#form').valid()){
+			// Submit the form data
+		    $.ajax(
+		      {
+		      	url: "/donee/signup/",
+		      	type: "POST",
+		        headers: { 'X-CSRFToken' : csrftoken },
+		        data: {
+		          'first_name': $('#first_name')[0].value,
+		          'last_name': $('#last_name')[0].value,
+		          'email': $('#email')[0].value,
+		          'phone': $('#phone')[0].value,
+		          'ref_id': $('#ref_id')[0].value
+		        },
+		        beforeSend: function( jqXHR, settingsObj ){
+		          // Send the submit button into 'loading' state
+		          $('#btnSubmit').button('loading');
+		        },
+		      }
+		    )
+		    .done(function(data, status, jqXHR){
+		      alert('Registration successful! Please check your email for further instructions.');
+		      window.location = window.location.protocol + '//' + window.location.host;
+		    })
+		    .fail(function(jqxhr, status, errorThrown){
+		      response = JSON.parse(jqxhr.responseText);
+		      $('.modal-title').html("Something's wrong!");
+		      $('.modal-body').html("<p>"+response.message+"</p>");
+		      $('#modal').modal();
+		    })
+		    .always(function(){
+		    	$('#btnSubmit').button('reset');
+		    });	
+		}
+	});
+</script>
+{% endblock %}

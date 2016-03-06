@@ -1,0 +1,23 @@
+Welcome aboard, {{ name }}!
+
+We are a community dedicated to helping people in genuine need.
+You'll find details below for logging in to your account - http://www.helpinghands.gives/account/login/
+
+Registration ID : {{ registration_id }}
+Username : {{username}}
+Password : {{password}}
+	
+You are further required to take the following actions:
+Please log in to your account and change your password.
+Complete your profile information.
+Submit your case once you have filled all necessary information.
+
+Please remember to fill information as accurately as possible, as we take our
+verification process seriously, and your case may get rejected if you enter
+false information.
+
+Once again, thanks for registering on our platform.
+In case you have any concerns/issues, feel free to reply to this email.
+We're real, live humans, listening to what you have to say.
+
+-The helpinghands.gives team.

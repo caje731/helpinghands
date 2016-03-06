@@ -14,6 +14,8 @@ Including another URLconf
     2. Import the include() function: from django.conf.urls import url, include
     3. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView
@@ -44,4 +46,9 @@ urlpatterns = [
     url('^accounts/logout/', views.logout_view, name="logout"),
     url('^accounts/', include('django.contrib.auth.urls')),
     url('^accounts/profile/', views.ProfileView.as_view(), name="profile"),
-]
+
+    # URLs for Cases
+    url('^cases/list/', views.PaginatedCasesView.as_view(), name="donor_cases_list"),
+    url('^cases/new/', views.create_case, name="donor_cases_new"),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

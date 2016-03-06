@@ -61,6 +61,8 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+MEDIA_ROOT = '/media/helpinghands/'
+MEDIA_URL = '/media/'
 ROOT_URLCONF = 'helpinghands.urls'
 
 TEMPLATES = [

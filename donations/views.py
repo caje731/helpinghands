@@ -1,17 +1,17 @@
 """ Views for my precious """
 
-import json
-
 from django.shortcuts import render
 from django.views.generic import View
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse, QueryDict
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from donations.models import Profile
+from donations.models import Profile, CaseDetail, BankDetail, Contact, Address
 # Create your views here.
 
 def home(request):
@@ -23,6 +23,10 @@ def home(request):
         {
             'donor_total_count': Profile.objects.filter(is_donor=True).count(),
             'donee_total_count': Profile.objects.filter(is_donor=False).count(),
+            'donee_rejected_count': Profile.objects.filter(is_donor=False, case_details__status=4).count(),
+            'donee_under_verification_count':Profile.objects.filter(is_donor=False, case_details__status=2).count(),
+            'donee_closed_count': Profile.objects.filter(is_donor=False, case_details__status=5).count(),
+            'total_donation': 0,
         },
     )
 
@@ -120,14 +124,172 @@ class DonorSignupView(View):
             }
         )
 
+@login_required
+def create_case(request):
+    if request.method == 'POST':
+        data = request.POST
+        print data
+        address = Address.objects.create(
+            house_name=data['house_name'],
+            street=data['street'],
+            area=data['area'],
+            city=data['city'],
+            state=data['state'],
+            country=data['country'],
+            pincode=data['pin'] or 0,
+        )
+        contact = Contact.objects.create(
+            phone=data['phone'],
+            email=data['email'],
+            address=address
+        )
+        bank_acc = BankDetail.objects.create(
+            acc_holder_name=data['acc_holder_name'],
+            acc_number=data['acc_number'],
+            bank_name=data['bank_name'],
+            branch_name=data['branch_name'],
+            ifsc=data['ifsc']
+        )
+        case = CaseDetail.objects.create(
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            contact=contact,
+            bank_details=bank_acc,
+        )
+
+        return JsonResponse(
+            {
+                'status':'success',
+                'message': 'Case Created Successfully'
+            },
+            status=201
+        )
+
+    else:
+        return HttpResponse(
+            content="Method Not Allowed",
+            status=405,
+            reason="Attempting to use "+request.method+" with a POST-only endpoint"
+        )
+
+class DoneeSignupView(View):
+    """ View for accessing/creating Donee """
+
+    def get(self, request, *args, **kwargs):
+        """ Show the donee registration page """
+
+        return render(
+            request,
+            'donations/donee/signup.html'
+        )
+
+    def post(self, request, *args, **kwargs):
+        """ Create a new donee """
+
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        ref_id = request.POST['ref_id']
+        phone =  request.POST['phone']
+
+        referrer = None
+        try:
+            referrer = Profile.objects.get(registration_id=ref_id)
+            if referrer.registration_id[0] != 'D':
+                # Referrer is not a Donor - don't allow registration
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'Referrer ID is invalid'
+                    },
+                    status=400,
+                )
+        except Profile.DoesNotExist:
+            return JsonResponse(
+                {
+                    'status': 'failure',
+                    'message': 'Referrer ID is invalid'
+                },
+                status=400,
+            )
+
+        if User.objects.filter(email=email).exists():
+            return JsonResponse(
+                {
+                    'status': 'failure',
+                    'message': 'A profile with the same email already exists'
+                },
+                status=400,
+            )
+
+        usr = User.objects.create_user(
+            email, # username 
+            email,
+            email, # password
+            first_name=first_name,
+            last_name=last_name
+        )
+
+        p = Profile(
+            user=usr,
+            is_donor=False,
+            referrer=referrer,
+            cell_phone=phone,
+        )
+        p.save()
+
+        subject = "Welcome to HelpingHands"
+        from_email = "www.helpinghands.gives<webmaster@helpinghands.gives>"
+        to_email = email
+        
+        context = {
+            'name': first_name,
+            'username': email,
+            'password': email,
+            'registration_id': p.registration_id,
+        }
+        msg_plain = render_to_string(
+            'donations/email/welcome_donee.txt',
+            context
+        )
+        msg_html = render_to_string(
+            'donations/email/welcome_donee.html',
+            context
+        )
+
+        msg = EmailMultiAlternatives(subject, msg_plain, from_email, [to_email])
+        msg.attach_alternative(msg_html, "text/html")
+        msg.send()
+        
+        return JsonResponse(
+            {
+                'status': 'success',
+                'message': 'Profile successfully created'
+            }
+        )
+
+
 class ProfileView(LoginRequiredMixin, View):
     login_url = "/accounts/login/"
 
     def get(self, request, *args, **kwargs):
+        context = {
+            'REASON_CHOICES': CaseDetail.REASON_CHOICES,
+            'STATUS_CHOICES': CaseDetail.CASE_STATUS_CHOICES,
+            'request': request,
+            'cases_page': request.GET.get('page') or 1
+        }
         if request.user.profile.is_donor:
             return render(
                 request,
                 'donations/donor/logged_in.html',
+                context,
+            )
+        else:
+            return render(
+                request,
+                'donations/donee/logged_in.html',
+                context,
             )
 
     def patch(self, request, *args, **kwargs):
@@ -135,44 +297,199 @@ class ProfileView(LoginRequiredMixin, View):
 
         data = QueryDict(request.body)
 
-        first_name = data['first_name']
-        last_name = data['last_name']
-        phone =  data['phone']
+        if data['patch_type'] == 'address':
+            pass
+        elif data['patch_type'] == 'work':
+            pass
+        elif data['patch_type'] == 'bank':
+            acc_holder_name = data['acc_holder_name']
+            acc_number = data['acc_number']
+            bank_name = data['bank_name']
+            branch_name = data['branch_name']
+            ifsc = data['ifsc']
+            cheque_copy = data['cheque_copy'] if 'cheque_copy' in data else None
+            bank_acc = request.user.profile.bank_details
 
-        if first_name is not None and len(first_name) > 0:
-            if request.user.first_name != first_name:
-                request.user.first_name = first_name
-                request.user.save()
+            if bank_acc is None:
+                bank_acc = BankDetail()
+
+            if acc_holder_name is not None and len(acc_holder_name) > 0:
+                bank_acc.acc_holder_name = acc_holder_name
+                bank_acc.save()
+            else:
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'Account Holder Name cannot be blank'
+                    },
+                    status=400,
+                )
+
+            if acc_number is not None and len(acc_number) > 0:
+                bank_acc.acc_number = acc_number
+                bank_acc.save()
+            else:
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'Account Number cannot be blank'
+                    },
+                    status=400,
+                )
+
+            if bank_name is not None and len(bank_name) > 0:
+                bank_acc.bank_name = bank_name
+                bank_acc.save()
+            else:
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'Bank Name cannot be blank'
+                    },
+                    status=400,
+                )
+
+            if branch_name is not None and len(branch_name) > 0:
+                bank_acc.branch_name = branch_name
+                bank_acc.save()
+            else:
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'Branch Name cannot be blank'
+                    },
+                    status=400,
+                )
+
+            if ifsc is not None and len(ifsc) > 0:
+                bank_acc.ifsc = ifsc
+                bank_acc.save()
+            else:
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'IFSC cannot be blank'
+                    },
+                    status=400,
+                )
+
+            if cheque_copy is not None and len(cheque_copy) > 0:
+                bank_acc.cheque_copy = cheque_copy
+                bank_acc.save()
+            request.user.profile.bank_details = bank_acc
+            request.user.profile.save()
+
+        elif data['patch_type'] == 'case':
+
+            reason = data['reason']
+            brief = data['brief']
+            wish_amt = data['wish_amt']
+            case = request.user.profile.case_details
+            
+            if case is None:
+                case = CaseDetail()
+            
+            if reason is not None and reason != '':
+                case.reason = reason
+                case.save()
+            else:
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'Reason not selected / invalid'
+                    },
+                    status=400,
+                )
+
+            if brief is not None and len(brief) > 0:
+                case.brief = brief
+                case.save()
+            else:
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'Enter a short description for the case'
+                    },
+                    status=400,
+                )                
+            
+            if wish_amt is not None and wish_amt != '' and float(wish_amt) > 0:
+                case.wish_amount = float(wish_amt)
+                case.save()
+            else:
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'Amount must be greater than zero'
+                    },
+                    status=400,
+                )
+            request.user.profile.case_details = case
+            request.user.profile.save()
+
         else:
-            return JsonResponse(
-                {
-                    'status': 'failure',
-                    'message': 'First Name cannot be blank'
-                },
-                status=400,
-            )
+            first_name = data['first_name']
+            last_name = data['last_name']
+            phone = data['phone']
 
-        if last_name is not None and len(last_name) > 0:
-            if request.user.last_name != last_name:
-                request.user.last_name = last_name
-                request.user.save()
-        else:
-            return JsonResponse(
-                {
-                    'status': 'failure',
-                    'message': 'Last Name cannot be blank'
-                },
-                status=400,
-            )
+            if first_name is not None and len(first_name) > 0:
+                if request.user.first_name != first_name:
+                    request.user.first_name = first_name
+                    request.user.save()
+            else:
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'First Name cannot be blank'
+                    },
+                    status=400,
+                )
 
-        if phone is not None and len(phone) > 0:
-            if request.user.profile.cell_phone != phone:
-                request.user.profile.cell_phone = phone
-                request.user.profile.save()
+            if last_name is not None and len(last_name) > 0:
+                if request.user.last_name != last_name:
+                    request.user.last_name = last_name
+                    request.user.save()
+            else:
+                return JsonResponse(
+                    {
+                        'status': 'failure',
+                        'message': 'Last Name cannot be blank'
+                    },
+                    status=400,
+                )
+
+            if phone is not None and len(phone) > 0:
+                if request.user.profile.cell_phone != phone:
+                    request.user.profile.cell_phone = phone
+                    request.user.profile.save()
         
         return JsonResponse(
             {
                 'status': 'success',
                 'message': 'Profile successfully updated'
             }
+        )
+
+class PaginatedCasesView(LoginRequiredMixin, View):
+    """ View for accessing cases in a paginated manner """
+
+    def get(self, request, *args, **kwargs):
+        """ Get all cases """
+        profiles = Profile.objects.filter(is_donor=False, case_details__status=1)
+        paginator = Paginator(profiles, 1) # Show 1 profile per page
+
+        page = request.GET.get('page')
+        try:
+            profiles = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            profiles = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            profiles = paginator.page(paginator.num_pages)
+
+        return render(
+            request,
+            'donations/donor/cases.html',
+            {'profiles': profiles}
         )

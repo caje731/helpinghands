@@ -1,0 +1,103 @@
+{% load static from staticfiles %}
+<div class="well">
+	<div class="page-header">
+		<h3 class="text-center">My Case Details</h3>	
+	</div>
+	 
+	{% if not request.user.profile.case_details or request.user.profile.case_details.status == 1 %}
+	<form id="form" class="form-horizontal">
+	{% csrf_token %}
+	
+	<div class="form-group">
+	  <label class="control-label col-md-2">Help needed for: </label>
+	  <div class="col-md-10">
+	  	{% for choice_value, choice_label in REASON_CHOICES %}
+	  		<div class="radio radio-primary">
+	  			<label>
+	  				<input 
+	  				{% if request.user.profile.case_details.reason == choice_value %} checked {% endif %} 
+	  				name="reason" id="reason_{{ choice_value }}" type="radio" value="{{ choice_value }}">
+	  			{{ choice_label }}
+	  			</label>	
+	  		</div>
+	  	{% endfor %}
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="case_brief">Describe your case: </label>
+	  <div class="col-md-10">
+	  	<textarea class="form-control" rows="10" cols="50" id="case_brief">{{ request.user.profile.case_details.brief }}</textarea>
+	  	<span class="help-block">A short summary, like 'Pursuing MSc. Need funds for paying fees.'</span>
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="wish_amt">You Require (Amount in INR): </label>
+	  <div class="col-md-10">
+	  	<input class="form-control" type="number" id="wish_amt" value="{{ request.user.profile.case_details.wish_amount }}">
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <div class="col-md-10 col-md-offset-2">
+	    <button type="button" class="btn btn-primary" id="btnSubmitCase" data-loading-text="Updating...">Update Case</button>
+	  </div>
+	</div>
+	</form>
+	{% else %}
+	<p>You cannot edit your case details since it is {{ request.user.profile.case_details.status }}</p>
+	<p>Help needed for: {{ request.user.profile.case_details.reason }}</p>
+	<p>Case Description:</p>
+	<p>{{request.user.profile.case_details.brief}}</p>
+	{% endif %}
+</div>
+
+{% block scripts %}
+<script src="{% static "jquery-validation/dist/jquery.validate.min.js" %}"></script>
+<script type="text/javascript">
+	var csrftoken = getCookie('csrftoken');
+	
+	$('#btnSubmitCase').click(function(eventObject){
+		
+		$('#form').validate();
+		if ($('#form').valid()){
+			// Submit the form data
+		    $.ajax(
+		      {
+		      	url: "/accounts/profile/",
+		      	type: "PATCH",
+		        headers: { 'X-CSRFToken' : csrftoken },
+		        data: {
+		        	'patch_type': 'case',
+		          	'reason': $('input[name=reason]:checked').val() || null,
+		          	'brief': $('#case_brief')[0].value || null,
+		          	'wish_amt': $('#wish_amt')[0].value || null,
+		        },
+		        beforeSend: function( jqXHR, settingsObj ){
+		          // Send the submit button into 'loading' state
+		          $('#btnSubmit').button('loading');
+		        },
+		      }
+		    )
+		    .done(function(data, status, jqXHR){
+		      $.snackbar({
+		      	content: "Profile Updated Successfully!",
+		      	style: "toast",
+		      	timeout: 1000 // disappear in milliseconds
+		      });
+		    })
+		    .fail(function(jqxhr, status, errorThrown){
+		      $.snackbar({
+		      	content: jqxhr.responseJSON.message,
+		      	style: "toast",
+		      	timeout: 1000 // disappear in milliseconds
+		      });
+		    })
+		    .always(function(){
+		    	$('#btnSubmit').button('reset');
+		    });	
+		}
+	});
+</script>
+{% endblock %}

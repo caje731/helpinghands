@@ -1,0 +1,72 @@
+{% load static from staticfiles %}
+{% load custom_filters %}
+{% for profile in profiles %}
+<div class="well">
+    <div class="page-header">
+        <h3 class="text-center">Case ID: {{ profile.case_details.id }}</h3>    
+    </div>
+    <section>
+        <h4 class="text-center">Summary</h4>
+        <table border=0 align="center">
+            <tr>
+                <td>Status:</td>
+                <td>{{ profile.case_details.status }}</td>
+            </tr>
+            <tr>
+                <td>Name:</td>
+                <td>{{ profile.user.first_name }} {{ profile.user.last_name }}</td>
+            </tr>
+            <tr>
+                <td>Wish Amount:</td>
+                <td>{{ profile.case_details.wish_amount }}</td>
+            </tr>
+            <tr>
+                <td>Total Pledge:</td>
+                <td>{{ profile.case_details.pledge_total.amount__sum }}</td>
+            </tr>
+        </table>
+    </section>
+    <br>
+    
+    <section>
+        <h4 class="text-center">Bank Details</h4>
+        <table border=0 align="center">
+            <tr>
+                <td>Account Holder Name:</td>
+                <td>{{ profile.bank_details.acc_holder_name }}</td>
+            </tr>
+            <tr>
+                <td>Account Number:</td>
+                <td>{{ profile.bank_details.acc_number }}</td>
+            </tr>
+            <tr>
+                <td>Bank Name:</td>
+                <td>{{ profile.bank_details.bank_name }}</td>
+            </tr>
+            <tr>
+                <td>Branch Name:</td>
+                <td>{{ profile.bank_details.branch_name }}</td>
+            </tr>
+            <tr>
+                <td>IFSC:</td>
+                <td>{{ profile.bank_details.ifsc }}</td>
+            </tr>
+        </table>
+    </section>
+</div>
+{% endfor %}
+<div class="pagination">
+    <span class="step-links">
+        {% if profiles.has_previous %}
+            <a href="?page={{ profiles.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ profiles.number }} of {{ profiles.paginator.num_pages }}.
+        </span>
+
+        {% if profiles.has_next %}
+            <a href="?page={{ profiles.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>

@@ -41,16 +41,16 @@
 				  	Cases Registered<span class="badge">{{ donee_total_count }}</span>
 				  </li>
 				  <li class="list-group-item">
-				  	Cases Rejected<span class="badge">0</span>
+				  	Cases Rejected<span class="badge">{{ donee_rejected_count}}</span>
 				  </li>
 				  <li class="list-group-item">
-				  	Cases Under Verification<span class="badge">0</span>
+				  	Cases Under Verification<span class="badge">{{ donee_under_verification_count }}</span>
 				  </li>
 				  <li class="list-group-item">
-				  	<strong>Cases Served</strong><span class="badge">0</span>
+				  	<strong>Cases Served</strong><span class="badge">{{ donee_closed_count }}</span>
 				  </li>
 				  <li class="list-group-item">
-				  	<strong>Total Donation</strong><span class="badge">0</span>
+				  	<strong>Total Donation</strong><span class="badge">{{ total_donation }}</span>
 				  </li>
 				</ul>
 			</div>
@@ -58,7 +58,7 @@
 				<div class="thumbnail">
 			      
 			      <div class="caption">
-			        <h3>Signup For Recipients</h3>
+			        <h3><a href="/accounts/profile/#newcase">Know someone in need?</a></h3>
 			        <!-- <p>Coming soon !</p> -->
 			        <!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
 			      </div>
