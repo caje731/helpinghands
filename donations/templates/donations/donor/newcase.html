@@ -180,7 +180,13 @@
 		  </div>
 		</div>
 	</div>
-
+	<div class="form-group">
+		<div class="checkbox col-md-12 text-center">
+          <label>
+            <input required id="check_tnc" type="checkbox"> I have read and understood the  
+            <a href="#" id="anchor_check_tnc">Terms and Conditions</a>
+          </label>
+	</div>
 	<div class="form-group">
 	  <div class="col-md-12 text-center">
 	    <button type="button" class="btn btn-primary" id="btnSubmitCase" data-loading-text="Creating...">Create Case</button>
@@ -188,11 +194,45 @@
 	</div>
 </form>
 
+<div class="modal fade" tabindex="-1" role="dialog" id="modal_tnc">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Terms and Conditions</h4>
+      </div>
+      <div class="modal-body">
+        {% include 'donations/donor/newcase_tnc.html' %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 {% block scripts %}
 <script src="{% static "jquery-validation/dist/jquery.validate.min.js" %}"></script>
 <script type="text/javascript">
 	var csrftoken = getCookie('csrftoken');
-	
+
+	// Show the Submit button only if TnC have been accepted
+	$('#btnSubmitCase').hide();	
+	$("#check_tnc").click(function(eventObject) {
+		if($("#check_tnc").is(':checked')){
+			$('#btnSubmitCase').show();
+		}
+		else{
+			$('#btnSubmitCase').hide();	
+		}
+	});
+
+	// Show the TnC in a modal
+	$("#anchor_check_tnc").click(function(eventObject){
+		eventObject.preventDefault();
+		$("#modal_tnc").modal('show');
+	});
+
 	$('#btnSubmitCase').click(function(eventObject){
 		$('#form').validate();
 		if ($('#form').valid()){

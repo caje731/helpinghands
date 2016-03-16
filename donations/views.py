@@ -128,7 +128,7 @@ class DonorSignupView(View):
 def create_case(request):
     if request.method == 'POST':
         data = request.POST
-        print data
+
         address = Address.objects.create(
             house_name=data['house_name'],
             street=data['street'],
