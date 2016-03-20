@@ -58,7 +58,12 @@ class Contact(models.Model):
     """ Contact details for each case """
 
     phone = models.CharField(
-        max_length=255,
+        max_length=20,
+        null=True,
+        blank=True,
+    )
+    phone_2 = models.CharField(
+        max_length=20,
         null=True,
         blank=True,
     )
@@ -67,11 +72,9 @@ class Contact(models.Model):
         null=True,
         blank=True,
     )
-    address = models.OneToOneField(
-        'Address',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+    case = models.OneToOneField(
+        'CaseDetail',
+        on_delete=models.CASCADE,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -84,7 +87,12 @@ class Address(models.Model):
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
     country = models.CharField(max_length=255)
-    pincode = models.PositiveSmallIntegerField()
+    pincode = models.CharField(max_length=10)
+    case = models.OneToOneField(
+        'CaseDetail',
+        on_delete=models.CASCADE,
+        null=True,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)    
 
@@ -96,6 +104,10 @@ class WorkDetail(models.Model):
     designation = models.CharField(max_length=255)
     phone = models.CharField(verbose_name='Office Phone', max_length=255)
     email = models.EmailField(verbose_name='Office Email')
+    case = models.OneToOneField(
+        'CaseDetail',
+        on_delete=models.CASCADE,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -116,6 +128,10 @@ class BankDetail(models.Model):
     branch_name = models.CharField(max_length=255)
     ifsc = models.CharField(verbose_name='IFSC', max_length=11)
     cheque_copy = models.ImageField(max_length=255, upload_to=user_dir_path)
+    case = models.OneToOneField(
+        'CaseDetail',
+        on_delete=models.CASCADE,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -137,36 +153,12 @@ class CaseDetail(models.Model):
     )
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    contact = models.OneToOneField(
-        'Contact',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
     reason = models.PositiveSmallIntegerField(choices=REASON_CHOICES, default=1)
     brief = models.TextField(verbose_name="Short Description")
     wish_amount = models.FloatField(default=0)
     status = models.PositiveSmallIntegerField(
         choices=CASE_STATUS_CHOICES,
         default=1
-    )
-    address = models.OneToOneField(
-        'Address',
-        null=True,
-        on_delete=models.SET_NULL,
-        blank=True,
-    )
-    work = models.OneToOneField(
-        'WorkDetail',
-        null=True,
-        on_delete=models.SET_NULL,
-        blank=True,
-    )
-    bank_details = models.OneToOneField(
-        'BankDetail',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
