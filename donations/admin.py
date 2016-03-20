@@ -12,11 +12,16 @@ class ContactInline(dca.StackedInline):
 class WorkInline(dca.StackedInline):
 	model = WorkDetail
 
+class BankInline(dca.StackedInline):
+	model = BankDetail
+
+
 class CaseDetailAdmin(dca.ModelAdmin):
 	inlines = [
 		ContactInline,
 		AddressInline,
 		WorkInline,
+		BankInline,
 	]
 
 dca.site.register(Profile)
