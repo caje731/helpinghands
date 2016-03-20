@@ -129,6 +129,11 @@ def create_case(request):
     if request.method == 'POST':
         data = request.POST
 
+        case = CaseDetail.objects.create(
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+        )
+
         address = Address.objects.create(
             house_name=data['house_name'],
             street=data['street'],
@@ -137,24 +142,20 @@ def create_case(request):
             state=data['state'],
             country=data['country'],
             pincode=data['pin'] or 0,
+            case=case,
         )
         contact = Contact.objects.create(
             phone=data['phone'],
             email=data['email'],
-            address=address
+            case=case
         )
         bank_acc = BankDetail.objects.create(
             acc_holder_name=data['acc_holder_name'],
             acc_number=data['acc_number'],
             bank_name=data['bank_name'],
             branch_name=data['branch_name'],
-            ifsc=data['ifsc']
-        )
-        case = CaseDetail.objects.create(
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            contact=contact,
-            bank_details=bank_acc,
+            ifsc=data['ifsc'],
+            case=case
         )
 
         return JsonResponse(
