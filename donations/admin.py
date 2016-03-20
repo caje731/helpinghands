@@ -9,10 +9,14 @@ class AddressInline(dca.StackedInline):
 class ContactInline(dca.StackedInline):
 	model = Contact
 
+class WorkInline(dca.StackedInline):
+	model = WorkDetail
+
 class CaseDetailAdmin(dca.ModelAdmin):
 	inlines = [
 		ContactInline,
 		AddressInline,
+		WorkInline,
 	]
 
 dca.site.register(Profile)
