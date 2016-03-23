@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'donations',
+    'nested_admin',
+
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -61,7 +63,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-MEDIA_ROOT = '/media/helpinghands/'
+MEDIA_ROOT = '/var/www/helpinghands/media/'
 MEDIA_URL = '/media/'
 ROOT_URLCONF = 'helpinghands.urls'
 

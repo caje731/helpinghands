@@ -51,4 +51,7 @@ urlpatterns = [
     url('^cases/list/', views.PaginatedCasesView.as_view(), name="donor_cases_list"),
     url('^cases/new/', views.create_case, name="donor_cases_new"),
 
+    # Nested inlines
+    url(r'^nested_admin/', include('nested_admin.urls'))
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

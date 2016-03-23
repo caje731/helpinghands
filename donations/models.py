@@ -174,3 +174,58 @@ class CasePledge(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Approval(models.Model):
+    """ Approval for a case """
+    approved = models.BooleanField()
+    approver = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+# I'd have liked this function to be inside the ApprovalAttachment class
+# body, however see the section on what Django can(not) serialize:
+# https://docs.djangoproject.com/en/1.9/topics/migrations/#serializing-values
+def approvalattachment_upload_path(instance, filename):
+    """ Return an upload path for approval-related documents """
+    # file will be uploaded to (MEDIA_ROOT + below)
+    return 'uploads/cases/{0}/approvals/{1}/{2}'.format(
+        instance.attached_for.case.id,
+        instance.attached_for.id,
+        filename
+    )
+
+class ApprovalAttachment(models.Model):
+    """ Files to be uploaded in support of approvals """
+
+    attachment = models.ImageField(
+        max_length=255,
+        upload_to=approvalattachment_upload_path
+    )
+    attached_for = models.ForeignKey(
+        Approval,
+        on_delete=models.CASCADE,
+        null=True, # Allow creation of attachments without an Approval instance
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class PhoneApproval(Approval):
+    """ Approval after a phone conversation with recipient """
+    case = models.OneToOneField(
+        'CaseDetail',
+        on_delete=models.CASCADE,
+    )
+
+class PersonalInterviewApproval(Approval):
+    """ Approval after a personal interview with recipient """
+    case = models.OneToOneField(
+        'CaseDetail',
+        on_delete=models.CASCADE,
+    )
+
+class VisitApproval(Approval):
+    """ Approval after a visit to residence/office of recipient """
+    case = models.OneToOneField(
+        'CaseDetail',
+        on_delete=models.CASCADE,
+    )
