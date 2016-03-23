@@ -119,6 +119,12 @@ def user_dir_path(instance, filename):
 
 class BankDetail(models.Model):
     """ Bank Account information """
+
+    def upload_path(self, filename):
+        """ Return an upload path for documents of BankDetail instance """
+        # file will be uploaded to MEDIA_ROOT/uploads/cases/<case_id>/bank/<filename>
+        return 'uploads/cases/{0}/bank/{1}'.format(self.case.id, filename)
+
     acc_holder_name = models.CharField(
         verbose_name="Account Holder's Name",
         max_length=255
@@ -127,7 +133,7 @@ class BankDetail(models.Model):
     bank_name = models.CharField(max_length=255)
     branch_name = models.CharField(max_length=255)
     ifsc = models.CharField(verbose_name='IFSC', max_length=11)
-    cheque_copy = models.ImageField(max_length=255, upload_to=user_dir_path)
+    cheque_copy = models.ImageField(max_length=255, upload_to=upload_path)
     case = models.OneToOneField(
         'CaseDetail',
         on_delete=models.CASCADE,
