@@ -145,7 +145,6 @@ class CaseDetail(models.Model):
     """ Information about a donee's case """
 
     REASON_CHOICES = (
-        (3, 'Other'),
         (1, 'Medical'),
         (2, 'Basic Education'),
     )
