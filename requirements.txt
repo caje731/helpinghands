@@ -1,4 +1,5 @@
 Django==1.9
 django-bower==5.0.4
+django-nested-admin==2.2.3
 MySQL-python==1.2.5
 Pillow==3.0.0
