@@ -8,7 +8,7 @@
 	<div class="page-header">
 		<h1>Please fill the form below:</h1>
 	</div>
-	<form id="form">
+	<form id="signup_form">
 	{% csrf_token %}
 	
 	<div class="form-group label-floating">
@@ -88,8 +88,8 @@
 
 	$('#btnSubmit').click(function(eventObject){
 		
-		$('#form').validate();
-		if ($('#form').valid()){
+		$('#signup_form').validate();
+		if ($('#signup_form').valid()){
 			// Submit the form data
 		    $.ajax(
 		      {
