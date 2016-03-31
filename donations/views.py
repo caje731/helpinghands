@@ -132,6 +132,9 @@ def create_case(request):
         case = CaseDetail.objects.create(
             first_name=data['first_name'],
             last_name=data['last_name'],
+            reason=data['reason'],
+            brief=data['brief'],
+            wish_amount=data['wish_amt'],
         )
 
         address = Address.objects.create(
