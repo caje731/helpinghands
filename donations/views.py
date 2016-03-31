@@ -479,21 +479,21 @@ class PaginatedCasesView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         """ Get all cases """
-        profiles = Profile.objects.filter(is_donor=False, case_details__status=1)
-        paginator = Paginator(profiles, 1) # Show 1 profile per page
+        cases = CaseDetail.objects.all()
+        paginator = Paginator(cases, 1) # Show 1 case per page
 
         page = request.GET.get('page')
         try:
-            profiles = paginator.page(page)
+            paged_cases = paginator.page(page)
         except PageNotAnInteger:
             # If page is not an integer, deliver first page.
-            profiles = paginator.page(1)
+            paged_cases = paginator.page(1)
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
-            profiles = paginator.page(paginator.num_pages)
+            paged_cases = paginator.page(paginator.num_pages)
 
         return render(
             request,
             'donations/donor/cases.html',
-            {'profiles': profiles}
+            {'cases': paged_cases}
         )
