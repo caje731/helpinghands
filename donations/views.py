@@ -22,7 +22,7 @@ def home(request):
         'donations/nav_bar/home.html',
         {
             'donor_total_count': Profile.objects.filter(is_donor=True).count(),
-            'donee_total_count': Profile.objects.filter(is_donor=False).count(),
+            'donee_total_count': CaseDetail.objects.all().count(),
             'donee_rejected_count': Profile.objects.filter(is_donor=False, case_details__status=4).count(),
             'donee_under_verification_count':Profile.objects.filter(is_donor=False, case_details__status=2).count(),
             'donee_closed_count': Profile.objects.filter(is_donor=False, case_details__status=5).count(),
