@@ -117,14 +117,13 @@ def user_dir_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/uploads/user_<id>/<filename>
     return 'uploads/user_{0}/{1}'.format(instance.user.id, filename)
 
+def cheque_copy_upload_path(instance, filename):
+    """ Return an upload path for documents of BankDetail instance """
+    # file will be uploaded to MEDIA_ROOT/uploads/cases/<case_id>/bank/<filename>
+    return 'uploads/cases/{0}/bank/{1}'.format(instance.case.id, filename)
+
 class BankDetail(models.Model):
     """ Bank Account information """
-
-    def upload_path(self, filename):
-        """ Return an upload path for documents of BankDetail instance """
-        # file will be uploaded to MEDIA_ROOT/uploads/cases/<case_id>/bank/<filename>
-        return 'uploads/cases/{0}/bank/{1}'.format(self.case.id, filename)
-
     acc_holder_name = models.CharField(
         verbose_name="Account Holder's Name",
         max_length=255
@@ -133,7 +132,7 @@ class BankDetail(models.Model):
     bank_name = models.CharField(max_length=255)
     branch_name = models.CharField(max_length=255)
     ifsc = models.CharField(verbose_name='IFSC', max_length=11)
-    cheque_copy = models.ImageField(max_length=255, upload_to=upload_path)
+    cheque_copy = models.ImageField(max_length=255, upload_to=cheque_copy_upload_path)
     case = models.OneToOneField(
         'CaseDetail',
         on_delete=models.CASCADE,
@@ -161,6 +160,7 @@ class CaseDetail(models.Model):
     reason = models.PositiveSmallIntegerField(choices=REASON_CHOICES, default=1)
     brief = models.TextField(verbose_name="Short Description")
     wish_amount = models.FloatField(default=0)
+    approved_amount = models.FloatField(default=0)
     status = models.PositiveSmallIntegerField(
         choices=CASE_STATUS_CHOICES,
         default=1
