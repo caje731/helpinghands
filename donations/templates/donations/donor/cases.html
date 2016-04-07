@@ -9,24 +9,73 @@
         <h4 class="text-center">Summary</h4>
         <table border=0 align="center">
             <tr>
-                <td>Status:</td>
-                <td>{{ case.status }}</td>
+                <td style="width: 200px">Status:</td>
+                {% for value, label in STATUS_CHOICES %}
+                {% if value == case.status %}
+                <td>{{ label }}</td>
+                {% endif %}
+                {% endfor %}
             </tr>
             <tr>
-                <td>Name:</td>
+                <td>Recipient Name:</td>
                 <td>{{ case.first_name }} {{ case.last_name }}</td>
             </tr>
             <tr>
-                <td>Wish Amount:</td>
-                <td>{{ case.wish_amount }}</td>
+                <td>Target Amount:</td>
+                <td>INR {{ case.approved_amount }}</td>
             </tr>
             <tr>
-                <td>Total Pledge:</td>
-                <td>{{ case.pledge_total.amount__sum }}</td>
+                <td>All Pledges:</td>
+                <td>INR {{ case.pledge_total.amount__sum }}</td>
+            </tr>
+        </table>
+        <br><br>
+        <table border=0 align="center">
+            <tr>
+                <td style="width: 200px">Purpose of request:</td>
+                {% for value, label in REASON_CHOICES %}
+                {% if value == case.reason %}
+                <td>{{ label }}</td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>Details:</td>
+                <td>{{ case.brief }}</td>
             </tr>
         </table>
     </section>
     <br>
+    {% if case.approved_amount > case.pledge_total.amount__sum and case.approved_amount > 0 %}
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#my_pledge" aria-expanded="false" aria-controls="my_pledge">
+    Pledge to this case
+    </button>
+    <div class="collapse" id="my_pledge">
+        <form id="pledge_form" class="form-horizontal">
+            {% csrf_token %}
+            <div class="well">
+                <!-- ------------------------------ pledge information  --------------------------- -->
+                <div class="form-group">
+                  <label class="control-label col-md-2">My pledge (INR): </label>
+                  <div class="col-md-10">
+                    <input class="form-control" 
+                    {% for pledge in pledges %}
+                        {% if pledge.case == case %} 
+                            value="{{ pledge.amount}}" 
+                        {%endif%}
+                    {% endfor %} 
+                    name="pledge_amt" id="pledge_amt" type="text" required>
+                  </div>
+                </div>
+            </div>
+            <div class="form-group">
+              <div class="col-md-12 text-center">
+                <button type="button" class="btn btn-primary" id="btnSubmitPledge" data-case-id="{{ case.id }}" data-loading-text="Saving...">Save</button>
+              </div>
+            </div>
+        </form>
+    </div>
+    {% endif %}
     <!-- 
     <section>
         <h4 class="text-center">Bank Details</h4>
@@ -70,3 +119,51 @@
         {% endif %}
     </span>
 </div>
+
+<script type="text/javascript">
+var csrftoken = getCookie('csrftoken');
+
+$('#pledge_amt').keyup(function(eventObject){
+    var input = eventObject.target.value;
+    eventObject.target.value = input.replace(/[^0-9]/g, '')
+});
+$('#btnSubmitPledge').click(function(eventObject){
+    $('#pledge_form').validate();
+    if ($('#pledge_form').valid()){
+        // Submit the form data
+        $.ajax(
+          {
+            url: "/cases/"+$('#btnSubmitPledge').data('case-id')+"/pledges/",
+            type: "POST",
+            headers: { 'X-CSRFToken' : csrftoken },
+            data: {
+                'pledge_amt': $('#pledge_amt')[0].value || null,
+            },
+            beforeSend: function( jqXHR, settingsObj ){
+              // Send the submit button into 'loading' state
+              $('#btnSubmit').button('loading');
+            },
+          }
+        )
+        .done(function(data, status, jqXHR){
+          $.snackbar({
+            content: "Saved Successfully!",
+            style: "toast",
+            timeout: 2000 // disappear in milliseconds
+          });
+          $('#pledge_form')[0].reset();
+          window.location.reload();
+        })
+        .fail(function(jqxhr, status, errorThrown){
+          $.snackbar({
+            content: jqxhr.responseJSON.message,
+            style: "toast",
+            timeout: 2000 // disappear in milliseconds
+          });
+        })
+        .always(function(){
+            $('#btnSubmitPledge').button('reset');
+        }); 
+    }
+});
+</script>

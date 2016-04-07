@@ -168,9 +168,12 @@ class CaseDetail(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def pledge_total(self):
+    def pledge_total(self, user=None):
         """ Get the total amount pledged for this case """
+        if user is not None:
+            return CasePledge.objects.filter(case=self, user=user).aggregate(Sum('amount'))
         return CasePledge.objects.filter(case=self).aggregate(Sum('amount'))
+
 
 class CasePledge(models.Model):
     """ All pledges for a case """

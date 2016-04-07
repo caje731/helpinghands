@@ -50,6 +50,7 @@ urlpatterns = [
     # URLs for Cases
     url('^cases/list/', views.PaginatedCasesView.as_view(), name="donor_cases_list"),
     url('^cases/new/', views.create_case, name="donor_cases_new"),
+    url('^cases/(?P<id>\d+)/pledges/', views.CasePledgesView.as_view(), name="case_pledges"),
 
     # Nested inlines
     url(r'^nested_admin/', include('nested_admin.urls'))

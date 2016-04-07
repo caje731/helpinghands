@@ -11,7 +11,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from donations.models import Profile, CaseDetail, BankDetail, Contact, Address
+from donations.models import Profile, CaseDetail, BankDetail, Contact, Address, CasePledge
 # Create your views here.
 
 def home(request):
@@ -495,5 +495,40 @@ class PaginatedCasesView(LoginRequiredMixin, View):
         return render(
             request,
             'donations/donor/cases.html',
-            {'cases': paged_cases}
+            {
+                'pledges': CasePledge.objects.filter(user=request.user, case__in=paged_cases),
+                'cases': paged_cases,
+                'STATUS_CHOICES': CaseDetail.CASE_STATUS_CHOICES,
+                'REASON_CHOICES': CaseDetail.REASON_CHOICES,
+            }
         )
+
+class CasePledgesView(LoginRequiredMixin, View):
+    """ View for accessing pledges of a case """
+
+    def post(self, request, *args, **kwargs):
+        """ Update pledge information for a case """
+        try:
+            user = request.user
+            pledge_amount = float(request.POST['pledge_amt'])
+            case = CaseDetail.objects.get(pk=kwargs['id'])
+            case_pledge = CasePledge.objects.update_or_create(
+                case=case,
+                user=user,
+                defaults={'amount': pledge_amount}
+            )
+
+            return JsonResponse(
+                {
+                    'status': 'success',
+                    'message': 'Pledge saved successfully'
+                }
+            )
+        except Exception as e:
+            return JsonResponse(
+                {
+                    'status': 'failure',
+                    'message': 'Something went wrong!',
+                },
+                status=500
+            )
