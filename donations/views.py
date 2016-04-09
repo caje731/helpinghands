@@ -26,7 +26,7 @@ def home(request):
             'donee_rejected_count': CaseDetail.objects.filter(status=4).count(),
             'donee_under_verification_count':CaseDetail.objects.filter(status=2).count(),
             'donee_closed_count': CaseDetail.objects.filter(status=5).count(),
-            'total_donation': int(CasePledge.objects.filter(remitted=True).aggregate(Sum('amount'))['amount__sum']) or 0,
+            'total_donation': int(CasePledge.objects.filter(remitted=True).aggregate(Sum('amount'))['amount__sum'] or 0),
         },
     )
 
