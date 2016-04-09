@@ -180,6 +180,7 @@ class CasePledge(models.Model):
     amount = models.FloatField(default=0)
     case = models.ForeignKey(CaseDetail)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    remitted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -237,3 +238,22 @@ class VisitApproval(Approval):
         'CaseDetail',
         on_delete=models.CASCADE,
     )
+
+def remitproof_upload_path(instance, filename):
+    """ Return an upload path for remittance proofs """
+    return 'uploads/cases/{0}/pledges/{1}/{2}'.format(
+        instance.pledge.case.id,
+        instance.pledge.id,
+        filename
+    )
+
+class RemittanceProof(models.Model):
+    """ Proof attachments for donors remitting against their pledges """
+
+    attachment = models.ImageField(
+        max_length=255,
+        upload_to=remitproof_upload_path
+    )
+    pledge = models.ForeignKey(CasePledge)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

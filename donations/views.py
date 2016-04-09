@@ -11,7 +11,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from donations.models import Profile, CaseDetail, BankDetail, Contact, Address, CasePledge
+from donations.models import *
 # Create your views here.
 
 def home(request):
@@ -479,7 +479,7 @@ class PaginatedCasesView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         """ Get all cases """
-        cases = CaseDetail.objects.all()
+        cases = CaseDetail.objects.filter(status=3)
         paginator = Paginator(cases, 1) # Show 1 case per page
 
         page = request.GET.get('page')
@@ -515,7 +515,7 @@ class CasePledgesView(LoginRequiredMixin, View):
             case_pledge = CasePledge.objects.update_or_create(
                 case=case,
                 user=user,
-                defaults={'amount': pledge_amount}
+                defaults={'amount': case.approved_amount - pledge_amount}
             )
 
             return JsonResponse(
@@ -525,6 +525,41 @@ class CasePledgesView(LoginRequiredMixin, View):
                 }
             )
         except Exception as e:
+            return JsonResponse(
+                {
+                    'status': 'failure',
+                    'message': 'Something went wrong!',
+                },
+                status=500
+            )
+
+class PledgeRemittancesView(LoginRequiredMixin, View):
+    """ View for accessing remittances of a pledge """
+
+    def post(self, request, *args, **kwargs):
+        """ Update pledge information for a case """
+        try:
+            user = request.user
+            case = CaseDetail.objects.get(pk=kwargs['case_id'])
+            case_pledge = CasePledge.objects.get(pk=kwargs['pledge_id'])
+
+            case_pledge.remitted = request.POST['remitted']
+            case_pledge.save()
+
+            for proof_file in request.FILES.values():
+                RemittanceProof.objects.create(
+                    attachment=proof_file,
+                    pledge=case_pledge
+                )
+
+            return JsonResponse(
+                {
+                    'status': 'success',
+                    'message': 'Information saved successfully'
+                }
+            )
+        except Exception as e:
+            print e
             return JsonResponse(
                 {
                     'status': 'failure',
