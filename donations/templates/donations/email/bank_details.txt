@@ -1,0 +1,23 @@
+Hey there, {{ name }}!
+
+This email is regarding case number : {{ case.id }}
+Thank you so much for pledging to help {{ case.first_name }} {{ case.last_name }}.
+We are extremely happy with your decision.
+
+Here are the bank details for this case:
+
+Account-holder's name: 	{{ case.bank_detail.acc_holder_name }}
+Account Number: 		{{ case.bank_detail.acc_number }}
+Bank Name: 				{{ case.bank_detail.bank_name }}
+Branch Name:			{{ case.bank_detail.branch_name }}
+IFS Code: 				{{ case.bank_detail.ifsc }}
+
+You are further required to take the following actions:
+1. Transfer/remit the amount you've pledged directly into the recipient's bank account
+2. Take a screenshot/snapshot of the transaction receipt, or of any correspondence from the recipient confirming the transaction.
+3. Upload it as proof of remittance / testimony against your pledge.
+
+In case you have any concerns/issues, feel free to reply to this email.
+We're real, live humans, listening to what you have to say.
+
+-The helpinghands.gives team.

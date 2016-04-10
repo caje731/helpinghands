@@ -510,14 +510,42 @@ class CasePledgesView(LoginRequiredMixin, View):
         """ Update pledge information for a case """
         try:
             user = request.user
-            pledge_amount = float(request.POST['pledge_amt'])
+            pledge_amount = abs(float(request.POST['pledge_amt']))
             case = CaseDetail.objects.get(pk=kwargs['id'])
-            case_pledge = CasePledge.objects.update_or_create(
+            target_remaining = case.approved_amount - (case.casepledge_set.aggregate(sum=Sum('amount'))['sum'] or 0)
+            case_pledge, created = CasePledge.objects.update_or_create(
                 case=case,
                 user=user,
-                defaults={'amount': case.approved_amount - pledge_amount}
+                defaults={'amount': min(
+                        target_remaining,
+                        pledge_amount
+                    )
+                }
             )
 
+            if created:
+                # This was a new pledge so send account info to the donor 
+                subject = "You've pledged to help "+ " ".join([case.first_name, case.last_name])
+                from_email = "www.helpinghands.gives<webmaster@helpinghands.gives>"
+                to_email = user.email
+                
+                context = {
+                    'user': user,
+                    'case': case,
+                }
+                msg_plain = render_to_string(
+                    'donations/email/bank_details.txt',
+                    context
+                )
+                msg_html = render_to_string(
+                    'donations/email/bank_details.html',
+                    context
+                )
+
+                msg = EmailMultiAlternatives(subject, msg_plain, from_email, [to_email])
+                msg.attach_alternative(msg_html, "text/html")
+                msg.send()
+                
             return JsonResponse(
                 {
                     'status': 'success',
@@ -559,7 +587,6 @@ class PledgeRemittancesView(LoginRequiredMixin, View):
                 }
             )
         except Exception as e:
-            print e
             return JsonResponse(
                 {
                     'status': 'failure',

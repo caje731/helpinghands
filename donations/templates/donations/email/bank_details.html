@@ -1,0 +1,67 @@
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Case Information | helpinghands.gives</title>
+    {% load static from staticfiles %}
+
+    <!-- Bootstrap -->
+    <link href="{% static "bootstrap/dist/css/bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  	<img src="{% static "donations/img/hh_logo_full.PNG" %}" 
+  	class="img-responsive center-block" alt="HelpingHands.gives">
+	<div class="page-header">
+  		<h1 class="text-center">Hey there, {{ user.first_name }}!</h1>
+	</div>
+	<div class="text-center">
+	<p>
+		This email is regarding case number : {{ case.id }}
+		Thank you so much for pledging to help {{ case.first_name }} {{ case.last_name }}.
+		We are extremely happy with your decision. Here are the bank details for this case:
+	</p>
+  
+	<p>Account holder's name: {{ case.bank_detail.acc_holder_name }}</p>
+	<p>Account Number       : {{ case.bank_detail.acc_number }}</p>
+	<p>Bank Name            : {{ case.bank_detail.bank_name }}</p>
+	<p>Branch Name          : {{ case.bank_detail.branch_name }}</p>
+	<p>IFS Code             : {{ case.bank_detail.ifsc }}</p>
+	
+	<p>You are further required to take the following actions:
+		<ul>
+			<li>Please <strong>transfer / remit</strong> the amount you've pledged directly into the recipient's bank account.</li>
+			<li>Take a <strong>screenshot / snapshot</strong> of the transaction receipt, or of any correspondence from the recipient confirming the transaction.</li>
+			<li><strong>Upload it</strong> as proof of remittance / testimony against your pledge.</li>
+		</ul>
+	</p>
+	<p>In case you have any concerns/issues, feel free to reply to this email.
+		<br>We're real, live humans, listening to what you have to say.
+	</p>
+
+	<footer>
+		<i>-The helpinghands.gives team.</i>
+	</footer>
+	</div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static "jquery/dist/jquery.min.js" %}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static "bootstrap/dist/js/bootstrap.min.js" %}"></script>
+  </body>
+</html>
