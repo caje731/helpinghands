@@ -6,11 +6,11 @@ We are extremely happy with your decision.
 
 Here are the bank details for this case:
 
-Account-holder's name: 	{{ case.bank_detail.acc_holder_name }}
-Account Number: 		{{ case.bank_detail.acc_number }}
-Bank Name: 				{{ case.bank_detail.bank_name }}
-Branch Name:			{{ case.bank_detail.branch_name }}
-IFS Code: 				{{ case.bank_detail.ifsc }}
+Account-holder's name: 	{{ case.bankdetail.acc_holder_name }}
+Account Number: 		{{ case.bankdetail.acc_number }}
+Bank Name: 				{{ case.bankdetail.bank_name }}
+Branch Name:			{{ case.bankdetail.branch_name }}
+IFS Code: 				{{ case.bankdetail.ifsc }}
 
 You are further required to take the following actions:
 1. Transfer/remit the amount you've pledged directly into the recipient's bank account
