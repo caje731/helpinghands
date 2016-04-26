@@ -16,7 +16,10 @@ from donations.models import *
 
 def home(request):
     """ Show the home page """
-
+    current_case = list(CaseDetail.objects.filter(status=3).order_by('-id'))[-1]
+    current_case_pledges = current_case.casepledge_set.aggregate(sum=Sum('amount'))['sum'] or 0 if current_case else 0
+    current_case_remits = current_case.casepledge_set.filter(remitted=True).aggregate(sum=Sum('amount'))['sum'] or 0 if current_case else 0
+    current_case_target_left = (current_case.approved_amount - current_case_pledges) if current_case else 0
     return render(
         request,
         'donations/nav_bar/home.html',
@@ -25,7 +28,12 @@ def home(request):
             'donee_total_count': CaseDetail.objects.all().count(),
             'donee_rejected_count': CaseDetail.objects.filter(status=4).count(),
             'donee_under_verification_count':CaseDetail.objects.filter(status=2).count(),
+            'donee_inprogress_count': CaseDetail.objects.filter(status=3).count(),
             'donee_closed_count': CaseDetail.objects.filter(status=5).count(),
+            'current_case': current_case,
+            'current_case_pledges': current_case_pledges,
+            'current_case_remits': current_case_remits,
+            'current_case_target_left': current_case_target_left,
             'total_donation': int(CasePledge.objects.filter(remitted=True).aggregate(Sum('amount'))['amount__sum'] or 0),
         },
     )
