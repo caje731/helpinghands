@@ -523,28 +523,28 @@ class CasePledgesView(LoginRequiredMixin, View):
                 }
             )
 
-            if created:
-                # This was a new pledge so send account info to the donor 
-                subject = "You've pledged to help "+ " ".join([case.first_name, case.last_name])
-                from_email = "www.helpinghands.gives<webmaster@helpinghands.gives>"
-                to_email = user.email
-                
-                context = {
-                    'user': user,
-                    'case': case,
-                }
-                msg_plain = render_to_string(
-                    'donations/email/bank_details.txt',
-                    context
-                )
-                msg_html = render_to_string(
-                    'donations/email/bank_details.html',
-                    context
-                )
+            # Send account info to the donor 
+            subject = "You've pledged to help "+ " ".join([case.first_name, case.last_name])
+            from_email = "www.helpinghands.gives<webmaster@helpinghands.gives>"
+            to_email = user.email
+            
+            context = {
+                'user': user,
+                'case': case,
+                'pledge': case_pledge.amount
+            }
+            msg_plain = render_to_string(
+                'donations/email/bank_details.txt',
+                context
+            )
+            msg_html = render_to_string(
+                'donations/email/bank_details.html',
+                context
+            )
 
-                msg = EmailMultiAlternatives(subject, msg_plain, from_email, [to_email])
-                msg.attach_alternative(msg_html, "text/html")
-                msg.send()
+            msg = EmailMultiAlternatives(subject, msg_plain, from_email, [to_email])
+            msg.attach_alternative(msg_html, "text/html")
+            msg.send()
                 
             return JsonResponse(
                 {
