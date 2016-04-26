@@ -22,7 +22,7 @@
 			    <li role="presentation">
 			    	<a href="#conv" aria-controls="conv" role="tab" data-toggle="pill">
 			    		<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
-			    		My Conversations
+			    		My Pledges
 			    	</a>
 			    </li>
 			    <li role="presentation">
@@ -54,7 +54,7 @@
 		    	{% view "/cases/list/?page={{cases_page}}" %}
 		    </div>
 		    <div role="tabpanel" class="tab-pane fade" id="conv">
-		    	You can see a historical list of all your case-conversations here.
+		    	{% include "donations/donor/pledgehistory.html" %}
 		    </div>
 		    <div role="tabpanel" class="tab-pane fade" id="newcase">
 		    	{% include 'donations/donor/newcase.html' %}

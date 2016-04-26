@@ -1,0 +1,32 @@
+{% load tz %}
+{% if request.user.casepledge_set.all.count == 0 %}
+You haven't pledged to donate for any case yet
+{% else %}
+	<div class="table-responsive">
+		<table class="table table-striped table-hover">
+	  		<thead>
+				<tr>
+				    <th>Case ID</th>
+				    <th>Benefactor</th>
+				    <th>Pledge Amount</th>
+				    <th>Remitted?</th>
+				    <th>Proof Uploaded?</th>
+				    <th>Last Updated</th>
+			  	</tr>
+			 </thead>
+	  		<tbody>
+		  		{% for p in request.user.casepledge_set.all %}
+				<tr>
+					<td>{{ p.case.id }}</td>
+					<td>{{ p.case.first_name }} {{ p.case.last_name }}</td>
+					<td>{{ p.amount }}</td>
+					<td>{{ p.remitted |yesno:"Yes,No,Maybe" }}</td>
+					<td>{{ p.remittanceproof_set.length | yesno:"Yes,No,Maybe" }}</td>
+					<td>{{ p.updated_at }}</td>
+					<td></td>
+				</tr>
+				{% endfor %}
+	  		</tbody>
+		</table>
+	</div>
+{% endif %}
