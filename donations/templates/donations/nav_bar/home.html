@@ -33,9 +33,9 @@
 			    </div>
 			</div>
 			<div class="col-md-4 col-sm-12">
-				<ul style="-webkit-padding-start: 0px;">
+				<ul style="-webkit-padding-start: 0px; line-height: 1">
 				  <li class="list-group-item">
-				  	Donors Registered<span class="badge">{{ donor_total_count }}</span>
+				  	<strong>Donors Registered</strong><span class="badge">{{ donor_total_count }}</span>
 				  </li>
 				  <li class="list-group-item">
 				  	Cases Registered<span class="badge">{{ donee_total_count }}</span>
@@ -47,11 +47,32 @@
 				  	Cases Under Verification<span class="badge">{{ donee_under_verification_count }}</span>
 				  </li>
 				  <li class="list-group-item">
+				  	Cases Verified<span class="badge">{{ donee_inprogress_count }}</span>
+				  </li>
+				  <li class="list-group-item">
 				  	<strong>Cases Served</strong><span class="badge">{{ donee_closed_count }}</span>
 				  </li>
 				  <li class="list-group-item">
-				  	<strong>Total Donation</strong><span class="badge">INR {{ total_donation }}</span>
+				  	<strong>All Donations</strong><span class="badge">INR {{ total_donation }}</span>
 				  </li>
+				</ul>
+
+				<ul style="-webkit-padding-start: 0px;">
+					{% if current_case %}
+				  	<li class="list-group-item">
+				  		<strong>Current Case</strong><span class="pull-right">{{ current_case.first_name}} {{ current_case.last_name }}</span>
+				  	</li>
+				  	<li class="list-group-item">
+				  		All pledges<span class="badge">INR {{ current_case_pledges }}</span>
+				  	</li>
+				  	<li class="list-group-item">
+				  		Target Remaining<span class="badge">INR {{ current_case_target_left }}</span>
+				  	</li>
+				  	{% else %}
+				  	<li class="list-group-item">
+				  		No currently active cases
+				  	</li>
+				  	{% endif %}
 				</ul>
 			</div>
 			<div class="col-md-4 col-sm-12">
