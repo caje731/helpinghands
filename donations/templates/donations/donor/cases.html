@@ -47,85 +47,96 @@
     </section>
     <br>
     {% if case.approved_amount > 0 %}
-    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#my_pledge" aria-expanded="false" aria-controls="my_pledge">
-    Pledge to this case
-    </button>
-    <div class="collapse" id="my_pledge">
-        <form id="pledge_form" class="form-horizontal">
-            {% csrf_token %}
-            <div class="well">
-                <!-- ------------------------------ pledge information  --------------------------- -->
-                <div class="form-group">
-                  <label class="control-label col-md-2">My pledge (INR): </label>
-                  <div class="col-md-10">
-                    <input class="form-control" 
-                    {% for pledge in pledges %}
-                        {% if pledge.case == case %} 
-                            value="{{ pledge.amount}}" 
-                        {%endif%}
-                    {% endfor %} 
-                    name="pledge_amt" id="pledge_amt" type="text" required
-                    {% if  case.approved_amount <= case.pledge_total.amount__sum %} disabled {% endif %}>
-                  </div>
-                </div>
+    <div id="my_pledge">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="text-center">My pledge for this case</h4>
             </div>
-            {% if  case.approved_amount > case.pledge_total.amount__sum %}
-            <div class="form-group">
-              <div class="col-md-12 text-center">
-                <button type="button" class="btn btn-primary" id="btnSubmitPledge" data-case-id="{{ case.id }}" data-loading-text="Saving...">Save</button>
-              </div>
-            </div>
-            {% else %}
-                <div class="text-center"><i>No more pledges shall be accepted for this case. Kindly remit your pledges, if any.</i></div>
-            {% endif %}
-        </form>
-        {% for pledge in pledges %}
-            {% if pledge.case == case and pledge.amount > 0 %}
-                <form id="remit_form" class="form-horizontal">
+            <div class="panel-body">
+                <form id="pledge_form" class="form-horizontal">
                     {% csrf_token %}
                     <div class="well">
-                        <!-- ------------------------------ remittance information  --------------------------- -->
+                        <!-- ------------------------------ pledge information  --------------------------- -->
                         <div class="form-group">
-                            <div class="checkbox col-md-12 text-center">
-                              <label>
-                                <input id="check_remit" type="checkbox" {% if pledge.remitted %} checked {% endif %}>
-                                I have remitted INR {{ pledge.amount }} to the recipient's account
-                              </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                          <input type="file" accept="image/*" id="remitproof" multiple>
-
-                          <div class="input-group">
-                            <input type="text" readonly class="form-control" placeholder="Submit proof(s) of remittance (images only)...">
-                            <span class="input-group-btn input-group-sm">
-                              <button type="button" class="btn btn-fab btn-fab-mini">
-                                <i class="mdi-editor-attach-file"></i>
-                              </button>
-                            </span>
+                          <label class="control-label col-md-2">Pledge Amount(INR): </label>
+                          <div class="col-md-10">
+                            <input class="form-control" 
+                            {% for pledge in pledges %}
+                                {% if pledge.case == case %} 
+                                    value="{{ pledge.amount}}" 
+                                {%endif%}
+                            {% endfor %} 
+                            name="pledge_amt" id="pledge_amt" type="text" required
+                            {% if  case.approved_amount <= case.pledge_total.amount__sum %} disabled {% endif %}>
                           </div>
                         </div>
                     </div>
-                    All submissions: {{ pledge.remittanceproof_set.count }}
-                        
-                    {% if pledge.remittanceproof_set.count > 0 %}
-                        <div class="row">
-                            {% for proof_file in pledge.remittanceproof_set.all %}
-                                <div class="col-xs-6 col-md-3">
-                                    <a href="{% static proof_file.attachment.url %}" class="thumbnail">
-                                      <img src="{{ proof_file.attachment.url }}">
-                                    </a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                    {% if  case.approved_amount > case.pledge_total.amount__sum %}
                     <div class="form-group">
                       <div class="col-md-12 text-center">
-                        <button type="button" class="btn btn-primary" id="btnSubmitRemittance" data-case-id="{{ case.id }}" data-pledge-id="{{ pledge.id }}" data-loading-text="Saving...">Save</button>
+                        <button type="button" class="btn btn-primary" id="btnSubmitPledge" data-case-id="{{ case.id }}" data-loading-text="Saving...">Save</button>
                       </div>
                     </div>
+                    {% else %}
+                        <div class="text-center"><i>No more pledges shall be accepted for this case. Kindly remit your pledges, if any.</i></div>
+                    {% endif %}
                 </form>
+            </div>
+        </div> 
+        {% for pledge in pledges %}
+            {% if pledge.case == case and pledge.amount > 0 %}
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4 class="text-center">Pledge Fulfilment (to be filled in after transferring funds)</h4>
+                    </div>
+                    <div class="panel-body">
+                        <form id="remit_form" class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="well">
+                                <!-- ------------------------------ remittance information  --------------------------- -->
+                                <div class="form-group">
+                                    <div class="checkbox col-md-12 text-center">
+                                      <label>
+                                        <input id="check_remit" type="checkbox" {% if pledge.remitted %} checked {% endif %}>
+                                        I have remitted INR {{ pledge.amount }} to the recipient's account
+                                      </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                  <input type="file" accept="image/*" id="remitproof" multiple>
+
+                                  <div class="input-group">
+                                    <input type="text" readonly class="form-control" placeholder="Submit proof(s) of remittance (images only)...">
+                                    <span class="input-group-btn input-group-sm">
+                                      <button type="button" class="btn btn-fab btn-fab-mini">
+                                        <i class="mdi-editor-attach-file"></i>
+                                      </button>
+                                    </span>
+                                  </div>
+                                </div>
+                            </div>
+                            All submissions: {{ pledge.remittanceproof_set.count }}
+                                
+                            {% if pledge.remittanceproof_set.count > 0 %}
+                                <div class="row">
+                                    {% for proof_file in pledge.remittanceproof_set.all %}
+                                        <div class="col-xs-6 col-md-3">
+                                            <a href="{% static proof_file.attachment.url %}" class="thumbnail">
+                                              <img src="{{ proof_file.attachment.url }}">
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-group">
+                              <div class="col-md-12 text-center">
+                                <button type="button" class="btn btn-primary" id="btnSubmitRemittance" data-case-id="{{ case.id }}" data-pledge-id="{{ pledge.id }}" data-loading-text="Saving...">Save</button>
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             {%endif%}
         {% endfor %}
     </div>
@@ -175,7 +186,7 @@ $('#btnSubmitPledge').click(function(eventObject){
         )
         .done(function(data, status, jqXHR){
           $.snackbar({
-            content: "Saved Successfully!",
+            content: "Saved Successfully! Check your email",
             style: "toast",
             timeout: 2000 // disappear in milliseconds
           });
