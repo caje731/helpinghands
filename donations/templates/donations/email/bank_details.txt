@@ -4,6 +4,7 @@ This email is regarding case number : {{ case.id }}
 Thank you so much for pledging to help {{ case.first_name }} {{ case.last_name }}.
 We are extremely happy with your decision.
 
+Your updated pledge amount stands at INR {{ pledge }}.
 Here are the bank details for this case:
 
 Account-holder's name: 	{{ case.bankdetail.acc_holder_name }}
