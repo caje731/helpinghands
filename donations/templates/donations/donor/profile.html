@@ -67,6 +67,7 @@
 		      	type: "PATCH",
 		        headers: { 'X-CSRFToken' : csrftoken },
 		        data: {
+		          'patch_type': 'profile',
 		          'first_name': $('#first_name')[0].value,
 		          'last_name': $('#last_name')[0].value,
 		          'phone': $('#phone')[0].value,
