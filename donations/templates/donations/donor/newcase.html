@@ -203,6 +203,11 @@
 <script type="text/javascript">
 	var csrftoken = getCookie('csrftoken');
 
+	$('#wish_amt').blur(function(eventObject){
+	    var input = eventObject.target.value;
+	    eventObject.target.value = input.replace(/[^0-9\.]/g, '')
+	});
+
 	// Show the Submit button only if TnC have been accepted
 	$('#btnSubmitCase').hide();	
 	$("#check_tnc").click(function(eventObject) {
