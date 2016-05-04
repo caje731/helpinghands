@@ -16,7 +16,10 @@ from donations.models import *
 
 def home(request):
     """ Show the home page """
-    current_case = list(CaseDetail.objects.filter(status=3).order_by('-id'))[-1]
+    try:
+        current_case = list(CaseDetail.objects.filter(status=3).order_by('-id'))[-1]
+    except:
+        current_case = None
     current_case_pledges = current_case.casepledge_set.aggregate(sum=Sum('amount'))['sum'] or 0 if current_case else 0
     current_case_remits = current_case.casepledge_set.filter(remitted=True).aggregate(sum=Sum('amount'))['sum'] or 0 if current_case else 0
     current_case_target_left = (current_case.approved_amount - current_case_pledges) if current_case else 0
