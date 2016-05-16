@@ -10,7 +10,7 @@ You haven't pledged to donate for any case yet
 				    <th>Benefactor</th>
 				    <th>Pledge Amount</th>
 				    <th>Remitted?</th>
-				    <th>Proof Uploaded?</th>
+				    <th>Transaction Reference</th>
 				    <th>Last Updated</th>
 			  	</tr>
 			 </thead>
@@ -21,7 +21,7 @@ You haven't pledged to donate for any case yet
 					<td>{{ p.case.first_name }} {{ p.case.last_name }}</td>
 					<td>{{ p.amount }}</td>
 					<td>{{ p.remitted |yesno:"Yes,No,Maybe" }}</td>
-					<td>{{ p.remittanceproof_set.length | yesno:"Yes,No,Maybe" }}</td>
+					<td>{{ p.txn_ref }}</td>
 					<td>{{ p.updated_at }}</td>
 					<td></td>
 				</tr>

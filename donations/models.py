@@ -181,6 +181,7 @@ class CasePledge(models.Model):
     case = models.ForeignKey(CaseDetail)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     remitted = models.BooleanField(default=False)
+    txn_ref = models.TextField(verbose_name="Transaction Details", default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

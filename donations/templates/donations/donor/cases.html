@@ -104,31 +104,13 @@
                                 </div>
 
                                 <div class="form-group">
-                                  <input type="file" accept="image/*" id="remitproof" multiple>
-
-                                  <div class="input-group">
-                                    <input type="text" readonly class="form-control" placeholder="Submit proof(s) of remittance (images only)...">
-                                    <span class="input-group-btn input-group-sm">
-                                      <button type="button" class="btn btn-fab btn-fab-mini">
-                                        <i class="mdi-editor-attach-file"></i>
-                                      </button>
-                                    </span>
+                                  <label class="control-label col-md-2" for="txn_ref">Transaction Details: </label>
+                                  <div class="col-md-10">
+                                    <textarea placeholder="Enter details of the remittance, like Cheque No./ UTR No./ Cash Details, for later reference" class="form-control" rows="10" cols="50" id="txn_ref">{{ pledge.txn_ref }}</textarea>
+                                    <span class="help-block">Cheque No./ UTR No./ Cash Details</span>
                                   </div>
                                 </div>
                             </div>
-                            All submissions: {{ pledge.remittanceproof_set.count }}
-                                
-                            {% if pledge.remittanceproof_set.count > 0 %}
-                                <div class="row">
-                                    {% for proof_file in pledge.remittanceproof_set.all %}
-                                        <div class="col-xs-6 col-md-3">
-                                            <a href="{% static proof_file.attachment.url %}" class="thumbnail">
-                                              <img src="{{ proof_file.attachment.url }}">
-                                            </a>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
                             <div class="form-group">
                               <div class="col-md-12 text-center">
                                 <button type="button" class="btn btn-primary" id="btnSubmitRemittance" data-case-id="{{ case.id }}" data-pledge-id="{{ pledge.id }}" data-loading-text="Saving...">Save</button>
@@ -209,10 +191,11 @@ $('#btnSubmitRemittance').click(function(eventObject){
     $('#remit_form').validate();
     if ($('#remit_form').valid()){
         var fd = new FormData();
-        for (i in $('#remitproof')[0].files){
-            fd.append('file'+i, $('#remitproof')[0].files[i]);
-        }
+        // for (i in $('#remitproof')[0].files){
+        //     fd.append('file'+i, $('#remitproof')[0].files[i]);
+        // }
         fd.append('remitted', $('#check_remit')[0].checked);
+        fd.append('txn_ref', $('#txn_ref')[0].value);
         // Submit the form data
         $.ajax(
           {

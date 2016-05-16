@@ -583,13 +583,14 @@ class PledgeRemittancesView(LoginRequiredMixin, View):
             case_pledge = CasePledge.objects.get(pk=kwargs['pledge_id'])
 
             case_pledge.remitted = request.POST['remitted']
+            case_pledge.txn_ref = request.POST['txn_ref']
             case_pledge.save()
 
-            for proof_file in request.FILES.values():
-                RemittanceProof.objects.create(
-                    attachment=proof_file,
-                    pledge=case_pledge
-                )
+            # for proof_file in request.FILES.values():
+            #     RemittanceProof.objects.create(
+            #         attachment=proof_file,
+            #         pledge=case_pledge
+            #     )
 
             return JsonResponse(
                 {
