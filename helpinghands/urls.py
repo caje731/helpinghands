@@ -57,3 +57,5 @@ urlpatterns = [
     url(r'^nested_admin/', include('nested_admin.urls'))
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.site.site_header = 'HelpingHands Admin Panel'
