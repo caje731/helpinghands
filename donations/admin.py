@@ -1,4 +1,6 @@
 import django.contrib.admin as dca
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 from donations.models import *
 import nested_admin
 
@@ -76,6 +78,32 @@ class CaseDetailAdmin(nested_admin.NestedModelAdmin):
                 instance.save()
             formset.save_m2m()
                 
+class CustomUserAdmin(UserAdmin):
+
+    list_display = (
+        'date_joined',
+        'email',
+        'first_name',
+        'last_name',
+        'referrer',
+        'last_login',
+        'is_staff',
+    )
+
+    def referrer(self, user_obj):
+        """The name of this User's referrer"""
+        
+        refr = user_obj.profile.referrer
+        return " ".join(
+            [
+                refr.user.first_name,
+                refr.user.last_name,
+            ]
+        ) if refr else ""
+
+    referrer.admin_order_field = 'profile__referrer__user'
 
 dca.site.register(Profile)
 dca.site.register(CaseDetail, CaseDetailAdmin)
+dca.site.unregister(User)
+dca.site.register(User, CustomUserAdmin)

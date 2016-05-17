@@ -53,7 +53,7 @@ class Profile(models.Model):
 
         # Call the "real" save() method.
         super(Profile, self).save(*args, **kwargs) 
-        
+
 class Contact(models.Model):
     """ Contact details for each case """
 
