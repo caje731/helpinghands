@@ -37,6 +37,7 @@ def home(request):
             'current_case_pledges': current_case_pledges,
             'current_case_remits': current_case_remits,
             'current_case_target_left': current_case_target_left,
+            'current_case_remits_left': int(current_case_pledges - current_case_remits or 0),
             'total_donation': int(CasePledge.objects.filter(remitted=True).aggregate(Sum('amount'))['amount__sum'] or 0),
         },
     )
