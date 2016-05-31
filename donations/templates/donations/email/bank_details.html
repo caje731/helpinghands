@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -26,40 +19,40 @@
     <![endif]-->
   </head>
   <body>
-  	<img src="{% static "donations/img/hh_logo_full.PNG" %}" 
-  	class="img-responsive center-block" alt="HelpingHands.gives">
-	<div class="page-header">
-  		<h1 class="text-center">Hey there, {{ user.first_name }}!</h1>
-	</div>
-	<div class="text-center">
-	<p>
-		This email is regarding case number : {{ case.id }}
-		Thank you so much for pledging to help {{ case.first_name }} {{ case.last_name }}.
-		We are extremely happy with your decision. Your updated pledge amount stands at INR {{ pledge }}.
-		Here are the bank details for this case:
-	</p>
+    <img src="{% static "donations/img/hh_logo_full.PNG" %}" 
+    class="img-responsive center-block" alt="HelpingHands.gives">
+    <div class="page-header">
+        <h1 class="text-center">Hey there, {{ user.first_name }}!</h1>
+    </div>
+    <div class="text-center">
+    <p>
+        This email is regarding case number : {{ case.id }}
+        Thank you so much for pledging to help {{ case.first_name }} {{ case.last_name }}.
+        We are extremely happy with your decision. Your updated pledge amount stands at INR {{ pledge }}.
+        Here are the bank details for this case:
+    </p>
   
-	<p>Account holder's name: {{ case.bankdetail.acc_holder_name }}</p>
-	<p>Account Number       : {{ case.bankdetail.acc_number }}</p>
-	<p>Bank Name            : {{ case.bankdetail.bank_name }}</p>
-	<p>Branch Name          : {{ case.bankdetail.branch_name }}</p>
-	<p>IFS Code             : {{ case.bankdetail.ifsc }}</p>
-	
-	<p>You are further required to take the following actions:
-		<ul>
-			<li>Please <strong>transfer / remit</strong> the amount you've pledged directly into the recipient's bank account.</li>
-			<li>Take a <strong>screenshot / snapshot</strong> of the transaction receipt, or of any correspondence from the recipient confirming the transaction.</li>
-			<li><strong>Upload it</strong> as proof of remittance / testimony against your pledge.</li>
-		</ul>
-	</p>
-	<p>In case you have any concerns/issues, feel free to reply to this email.
-		<br>We're real, live humans, listening to what you have to say.
-	</p>
+    <p>Account holder's name: {{ case.bankdetail.acc_holder_name }}</p>
+    <p>Account Number       : {{ case.bankdetail.acc_number }}</p>
+    <p>Bank Name            : {{ case.bankdetail.bank_name }}</p>
+    <p>Branch Name          : {{ case.bankdetail.branch_name }}</p>
+    <p>IFS Code             : {{ case.bankdetail.ifsc }}</p>
+    
+    <p>You are further required to take the following actions:
+        <ul>
+            <li>Make an <strong>online remittance</strong> by adding the payee in your bank account or <strong>deposit cheque/cash</strong> into the bank account as per your convenience.</li>
+            <li>After the online bank transfer/cash/cheque deposit into bank,  once again log in to the donor page and go to the section 'Pledge fulfillment' and <strong>tick the box</strong>'I have remitted...'</li>
+            <li>Please fill your remittance details like cheque no. /UTR no. / cash deposit details and save.</li>
+        </ul>
+    </p>
+    <p>In case you have any concerns/issues, feel free to reply to this email.
+        <br>We're real, live humans, listening to what you have to say.
+    </p>
 
-	<footer>
-		<i>-The helpinghands.gives team.</i>
-	</footer>
-	</div>
+    <footer>
+        <i>-The helpinghands.gives team.</i>
+    </footer>
+    </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{% static "jquery/dist/jquery.min.js" %}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

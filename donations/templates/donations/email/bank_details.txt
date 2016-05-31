@@ -14,9 +14,9 @@ Branch Name:			{{ case.bankdetail.branch_name }}
 IFS Code: 				{{ case.bankdetail.ifsc }}
 
 You are further required to take the following actions:
-1. Transfer/remit the amount you've pledged directly into the recipient's bank account
-2. Take a screenshot/snapshot of the transaction receipt, or of any correspondence from the recipient confirming the transaction.
-3. Upload it as proof of remittance / testimony against your pledge.
+1. Make an online remittance by adding the payee in your bank account or deposit cheque/cash into the bank account as per your convenience.
+2. After the online bank transfer/cash/cheque deposit into bank,  once again log in to the donor page and go to the section 'Pledge fulfillment' and tick the box 'I have remitted...'
+3. Please fill your remittance details like cheque no. /UTR no. / cash deposit details and save.
 
 In case you have any concerns/issues, feel free to reply to this email.
 We're real, live humans, listening to what you have to say.
