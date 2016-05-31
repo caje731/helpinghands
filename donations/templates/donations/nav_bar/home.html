@@ -47,7 +47,7 @@
 				  	Cases Under Verification<span class="badge">{{ donee_under_verification_count }}</span>
 				  </li>
 				  <li class="list-group-item">
-				  	Cases Verified<span class="badge">{{ donee_inprogress_count }}</span>
+					Active Cases<span class="badge">{{ donee_inprogress_count }}</span>
 				  </li>
 				  <li class="list-group-item">
 				  	<strong>Cases Served</strong><span class="badge">{{ donee_closed_count }}</span>
@@ -68,6 +68,9 @@
 				  	<li class="list-group-item">
 				  		Target Remaining<span class="badge">INR {{ current_case_target_left }}</span>
 				  	</li>
+					<li class="list-group-item">
+						Remittance Pending<span class="badge">INR {{ current_case_remits_left }}</span>
+					</li>
 				  	{% else %}
 				  	<li class="list-group-item">
 				  		No currently active cases
