@@ -1,3 +1,5 @@
+from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
 import django.contrib.admin as dca
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -53,6 +55,19 @@ class PersonalInterviewApprovalInline(nested_admin.NestedStackedInline):
         obj.save()
 
 class CaseDetailAdmin(nested_admin.NestedModelAdmin):
+
+    list_display = (
+        'first_name',
+        'last_name',
+        'get_reason_display',
+        'wish_amount',
+        'approved_amount',
+        'status',
+        'case_creator_name',
+        'created_at',
+        'updated_at'
+    )
+
     inlines = [
         ContactInline,
         AddressInline,
@@ -77,7 +92,29 @@ class CaseDetailAdmin(nested_admin.NestedModelAdmin):
                 
                 instance.save()
             formset.save_m2m()
-                
+
+    def get_reason_display(self, model_obj):
+        """ Return the reason attribute of the CaseDetail object """
+        return model_obj.get_reason_display()
+    get_reason_display.short_description = 'Reason'
+    get_reason_display.admin_order_field = 'reason'
+
+    def case_creator_name(self, model_obj):
+        """ The name of the user who created this case """
+        return mark_safe(
+            '<a href="{}">{}</a>'.format(
+                reverse("admin:auth_user_change", args=(model_obj.created_by.id,)),
+                " ".join(
+                    [
+                        model_obj.created_by.first_name,
+                        model_obj.created_by.last_name
+                    ]
+                )
+            )
+        )
+    case_creator_name.short_description = "Case Creator"
+    case_creator_name.admin_order_field = 'created_by'
+
 class CustomUserAdmin(UserAdmin):
 
     list_display = (
