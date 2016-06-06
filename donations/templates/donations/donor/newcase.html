@@ -146,6 +146,19 @@
 			  </div>
 			</div>
 			<div class="form-group">
+			  <label class="control-label col-md-2">Account Type: </label>
+			  <div class="col-md-10">
+			  	{% for choice_value, choice_label in ACC_TYPE_CHOICES %}
+			  		<div class="radio radio-primary">
+			  			<label>
+			  				<input name="acc_type" id="acc_type_{{ choice_value }}" type="radio" value="{{ choice_value }}" {% if choice_value == 1 %} checked {% endif %}>
+			  			{{ choice_label }}
+			  			</label>	
+			  		</div>
+			  	{% endfor %}
+			  </div>
+			</div>
+			<div class="form-group">
 			  <label class="control-label col-md-2" for="bank_name">Bank Name </label>
 			  <div class="col-md-10">
 			  	<input class="form-control" type="text" id="bank_name">
@@ -255,6 +268,7 @@
 		        	// bank details
 		          	'acc_holder_name': $('#acc_holder_name')[0].value || null,
 		          	'acc_number': $('#acc_number')[0].value || null,
+		          	'acc_type': $('input[name=acc_type]:checked').val() || null,
 		          	'bank_name': $('#bank_name')[0].value || null,
 		          	'branch_name': $('#branch_name')[0].value || null,
 		          	'ifsc': $('#ifsc')[0].value || null,

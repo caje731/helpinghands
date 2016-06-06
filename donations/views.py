@@ -167,6 +167,7 @@ def create_case(request):
         bank_acc = BankDetail.objects.create(
             acc_holder_name=data['acc_holder_name'],
             acc_number=data['acc_number'],
+            acc_type=data['acc_type'],
             bank_name=data['bank_name'],
             branch_name=data['branch_name'],
             ifsc=data['ifsc'],
@@ -292,6 +293,7 @@ class ProfileView(LoginRequiredMixin, View):
         context = {
             'REASON_CHOICES': CaseDetail.REASON_CHOICES,
             'STATUS_CHOICES': CaseDetail.CASE_STATUS_CHOICES,
+            'ACC_TYPE_CHOICES': BankDetail.ACC_TYPE_CHOICES,
             'request': request,
             'cases_page': request.GET.get('page') or 1
         }
@@ -543,7 +545,7 @@ class CasePledgesView(LoginRequiredMixin, View):
             context = {
                 'user': user,
                 'case': case,
-                'pledge': case_pledge.amount
+                'pledge': case_pledge.amount,
             }
             msg_plain = render_to_string(
                 'donations/email/bank_details.txt',

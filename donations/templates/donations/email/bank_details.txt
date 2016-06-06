@@ -9,6 +9,7 @@ Here are the bank details for this case:
 
 Account-holder's name: 	{{ case.bankdetail.acc_holder_name }}
 Account Number: 		{{ case.bankdetail.acc_number }}
+Account Type: 			{{ case.bankdetail.get_acc_type_display }}
 Bank Name: 				{{ case.bankdetail.bank_name }}
 Branch Name:			{{ case.bankdetail.branch_name }}
 IFS Code: 				{{ case.bankdetail.ifsc }}

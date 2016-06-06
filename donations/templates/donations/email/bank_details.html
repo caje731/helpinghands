@@ -34,6 +34,7 @@
   
     <p>Account holder's name: {{ case.bankdetail.acc_holder_name }}</p>
     <p>Account Number       : {{ case.bankdetail.acc_number }}</p>
+    <p>Account Type         : {{ case.bankdetail.get_acc_type_display }}</p>
     <p>Bank Name            : {{ case.bankdetail.bank_name }}</p>
     <p>Branch Name          : {{ case.bankdetail.branch_name }}</p>
     <p>IFS Code             : {{ case.bankdetail.ifsc }}</p>

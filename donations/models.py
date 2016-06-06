@@ -124,11 +124,19 @@ def cheque_copy_upload_path(instance, filename):
 
 class BankDetail(models.Model):
     """ Bank Account information """
+    ACC_TYPE_CHOICES = (
+        (1, 'Savings'),
+        (2, 'Current'),
+    )
     acc_holder_name = models.CharField(
         verbose_name="Account Holder's Name",
         max_length=255
     )
     acc_number = models.CharField(verbose_name='Account Number', max_length=255)
+    acc_type = models.PositiveSmallIntegerField(
+        choices=ACC_TYPE_CHOICES,
+        default=1
+    )
     bank_name = models.CharField(max_length=255)
     branch_name = models.CharField(max_length=255)
     ifsc = models.CharField(verbose_name='IFSC', max_length=11)
