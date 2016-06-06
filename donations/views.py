@@ -147,6 +147,7 @@ def create_case(request):
             reason=data['reason'],
             brief=data['brief'],
             wish_amount=data['wish_amt'],
+            created_by=request.user,
         )
 
         address = Address.objects.create(

@@ -32,12 +32,6 @@ class Profile(models.Model):
         null=True,
         blank=True,
     )
-    case_details = models.OneToOneField(
-        'CaseDetail',
-        on_delete=models.SET_NULL,
-        null=True, # Cases only belong to donees
-        blank=True,
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -173,6 +167,7 @@ class CaseDetail(models.Model):
         choices=CASE_STATUS_CHOICES,
         default=1
     )
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
