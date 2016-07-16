@@ -15,7 +15,14 @@
 			    <li role="presentation" class="active">
 			    	<a href="#cases" aria-controls="cases" role="tab" data-toggle="pill">
 			    		<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
-			    		All Cases
+                         Active Cases
+                    </a>
+			    </li>
+
+			    <li role="presentation">
+	                <a href="#arch" aria-controls="cases" role="tab" data-toggle="pill">
+                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+		                Archived Cases
 			    	</a>
 			    </li>
 			    
@@ -52,6 +59,9 @@
 		  <div class="tab-content">
 		    <div role="tabpanel" class="tab-pane active in" id="cases">
 		    	{% view "/cases/list/?page={{cases_page}}" %}
+		    </div>
+		    <div role="tabpanel" class="tab-pane fade" id="arch">
+                {% view '/cases/archived/' %}
 		    </div>
 		    <div role="tabpanel" class="tab-pane fade" id="conv">
 		    	{% include "donations/donor/pledgehistory.html" %}

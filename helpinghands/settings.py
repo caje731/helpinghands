@@ -96,16 +96,20 @@ DATABASES = config.get_db_settings()
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation'+\
+                '.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation'+\
+                '.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation'+\
+                '.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation'+\
+                '.NumericPasswordValidator',
     },
 ]
 
@@ -138,7 +142,22 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "bower_components"),
 )
 
-# ======== BOWER ========== 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
+# ======== BOWER ==========
 INSTALLED_APPS += ('djangobower',)
 STATICFILES_FINDERS += ('djangobower.finders.BowerFinder',)
 BOWER_COMPONENTS_ROOT = BASE_DIR

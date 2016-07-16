@@ -177,6 +177,12 @@ class CaseDetail(models.Model):
             return CasePledge.objects.filter(case=self, user=user).aggregate(Sum('amount'))
         return CasePledge.objects.filter(case=self).aggregate(Sum('amount'))
 
+    def remitted_total(self, user=None):
+        """ Get the total amount remitted to this case """
+        if user is not None:
+            return CasePledge.objects.filter(case=self, remitted=True, user=user).aggregate(Sum('amount'))
+        return CasePledge.objects.filter(case=self, remitted=True).aggregate(Sum('amount'))
+
 
 class CasePledge(models.Model):
     """ All pledges for a case """

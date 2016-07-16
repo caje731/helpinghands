@@ -24,16 +24,48 @@ from donations import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home, name='home'),
-    
+
     # URLs for the navigation bar
-    url(r'^about/$', TemplateView.as_view(template_name='donations/nav_bar/about_us.html'), name='about'),
-    url(r'^faq/$', TemplateView.as_view(template_name='donations/nav_bar/FAQ.html'), name='faq'),
-    url(r'^people/$', TemplateView.as_view(template_name='donations/nav_bar/people.html'), name='people'),
-    url(r'^tou/$', TemplateView.as_view(template_name='donations/nav_bar/TOU.html'), name='tou'),
-    url(r'^privacy/$', TemplateView.as_view(template_name='donations/nav_bar/privacy_policy.html'), name='privacy'),
-    url(r'^external/$', TemplateView.as_view(template_name='donations/nav_bar/helpful_links.html'), name='external'),
-    url(r'^donor/signup/$', views.DonorSignupView.as_view(), name='donor_signup'),
-    
+    url(
+        r'^about/$',
+        TemplateView.as_view(template_name='donations/nav_bar/about_us.html'),
+        name='about'
+    ),
+    url(
+        r'^faq/$',
+        TemplateView.as_view(template_name='donations/nav_bar/FAQ.html'),
+        name='faq'
+    ),
+    url(
+        r'^people/$',
+        TemplateView.as_view(template_name='donations/nav_bar/people.html'),
+        name='people'
+    ),
+    url(
+        r'^tou/$',
+        TemplateView.as_view(template_name='donations/nav_bar/TOU.html'),
+        name='tou'
+    ),
+    url(
+        r'^privacy/$',
+        TemplateView.as_view(
+            template_name='donations/nav_bar/privacy_policy.html'
+        ),
+        name='privacy'
+    ),
+    url(
+        r'^external/$',
+        TemplateView.as_view(
+            template_name='donations/nav_bar/helpful_links.html'
+        ),
+        name='external'
+    ),
+    url(
+        r'^donor/signup/$',
+        views.DonorSignupView.as_view(),
+        name='donor_signup'
+    ),
+
     # Use the default auth views which give the following urls:
     # ^login/$ [name='login']
     # ^logout/$ [name='logout']
@@ -41,17 +73,39 @@ urlpatterns = [
     # ^password_change/done/$ [name='password_change_done']
     # ^password_reset/$ [name='password_reset']
     # ^password_reset/done/$ [name='password_reset_done']
-    # ^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$ [name='password_reset_confirm']
+    # ^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-
+    #   [0-9A-Za-z]{1,20})/$ [name='password_reset_confirm']
     # ^reset/done/$ [name='password_reset_complete']
     url('^accounts/logout/', views.logout_view, name="logout"),
     url('^accounts/', include('django.contrib.auth.urls')),
     url('^accounts/profile/', views.ProfileView.as_view(), name="profile"),
 
     # URLs for Cases
-    url('^cases/list/', views.PaginatedCasesView.as_view(), name="donor_cases_list"),
-    url('^cases/new/', views.create_case, name="donor_cases_new"),
-    url('^cases/(?P<id>\d+)/pledges/$', views.CasePledgesView.as_view(), name="case_pledges"),
-    url('^cases/(?P<case_id>\d+)/pledges/(?P<pledge_id>\d+)/remittance/$', views.PledgeRemittancesView.as_view(), name="pledge_remittances"),
+    url(
+        '^cases/list/',
+        views.PaginatedCasesView.as_view(),
+        name="donor_cases_list"
+    ),
+    url(
+        '^cases/new/',
+        views.create_case,
+        name="donor_cases_new"
+    ),
+    url(
+        '^cases/archived/',
+        views.ArchiveListView.as_view(),
+        name="donor_cases_archived"
+    ),
+    url(
+        r'^cases/(?P<id>\d+)/pledges/$',
+        views.CasePledgesView.as_view(),
+        name="case_pledges"
+    ),
+    url(
+        r'^cases/(?P<case_id>\d+)/pledges/(?P<pledge_id>\d+)/remittance/$',
+        views.PledgeRemittancesView.as_view(),
+        name="pledge_remittances"
+    ),
 
     # Nested inlines
     url(r'^nested_admin/', include('nested_admin.urls'))
