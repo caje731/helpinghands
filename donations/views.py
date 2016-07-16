@@ -637,7 +637,8 @@ class ArchiveListView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         """ Return a list of archived cases """
-        closed_cases = CaseDetail.objects.filter(status=5)
+        closed_cases = CaseDetail.objects.filter(status=5)\
+                .order_by('-created_at')
         for case in closed_cases:
             case.reason_label = CaseDetail.REASON_CHOICES[case.reason][1]
         return render(
