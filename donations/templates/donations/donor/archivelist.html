@@ -1,0 +1,26 @@
+
+{% load tz %}
+<div class="table-responsive">
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr>
+			    <th>Created On</th>
+			    <th>Recipient Name</th>
+			    <th>Reason</th>
+			    <th>Amount raised by donors (INR)</th>
+			    <th>Closed on</th>
+			</tr>
+		 </thead>
+		<tbody>
+			{% for case in cases %}
+			<tr>
+				<td>{{ case.created_at | date:"DATE_FORMAT" }}</td>
+				<td>{{ case.first_name }} {{ case.last_name }}</td>
+				<td>{{ case.reason_label }}</td>
+				<td>{{ case.remitted_total.amount__sum }}</td>
+				<td>{{ case.updated_at | date:"DATE_FORMAT" }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
