@@ -14,15 +14,23 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from donations.models import *
 # Create your views here.
 
+
 def home(request):
     """ Show the home page """
     try:
-        current_case = list(CaseDetail.objects.filter(status=3).order_by('-id'))[-1]
+        current_case = list(
+            CaseDetail.objects.filter(status=3).order_by('-id')
+        )[-1]
     except:
         current_case = None
-    current_case_pledges = current_case.casepledge_set.aggregate(sum=Sum('amount'))['sum'] or 0 if current_case else 0
-    current_case_remits = current_case.casepledge_set.filter(remitted=True).aggregate(sum=Sum('amount'))['sum'] or 0 if current_case else 0
-    current_case_target_left = (current_case.approved_amount - current_case_pledges) if current_case else 0
+    current_case_pledges = current_case.casepledge_set.aggregate(
+        sum=Sum('amount')
+    )['sum'] or 0 if current_case else 0
+    current_case_remits = current_case.casepledge_set.filter(remitted=True)\
+            .aggregate(sum=Sum('amount'))['sum'] or 0 if current_case else 0
+    current_case_target_left = (
+        current_case.approved_amount - current_case_pledges
+    ) if current_case else 0
     return render(
         request,
         'donations/nav_bar/home.html',
@@ -30,15 +38,23 @@ def home(request):
             'donor_total_count': Profile.objects.filter(is_donor=True).count(),
             'donee_total_count': CaseDetail.objects.all().count(),
             'donee_rejected_count': CaseDetail.objects.filter(status=4).count(),
-            'donee_under_verification_count':CaseDetail.objects.filter(status=2).count(),
-            'donee_inprogress_count': CaseDetail.objects.filter(status=3).count(),
+            'donee_under_verification_count':CaseDetail.objects.filter(
+                status=2
+            ).count(),
+            'donee_inprogress_count': CaseDetail.objects.filter(status=3)\
+                .count(),
             'donee_closed_count': CaseDetail.objects.filter(status=5).count(),
             'current_case': current_case,
             'current_case_pledges': current_case_pledges,
             'current_case_remits': current_case_remits,
             'current_case_target_left': current_case_target_left,
-            'current_case_remits_left': int(current_case_pledges - current_case_remits or 0),
-            'total_donation': int(CasePledge.objects.filter(remitted=True).aggregate(Sum('amount'))['amount__sum'] or 0),
+            'current_case_remits_left': int(
+                current_case_pledges - current_case_remits or 0
+            ),
+            'total_donation': int(
+                CasePledge.objects.filter(remitted=True)\
+                .aggregate(Sum('amount'))['amount__sum'] or 0
+            ),
         },
     )
 
@@ -91,7 +107,7 @@ class DonorSignupView(View):
             )
 
         usr = User.objects.create_user(
-            email, # username 
+            email, # username
             email,
             email, # password
             first_name=first_name,
@@ -109,7 +125,7 @@ class DonorSignupView(View):
         subject = "Welcome to HelpingHands"
         from_email = "www.helpinghands.gives<webmaster@helpinghands.gives>"
         to_email = email
-        
+
         context = {
             'name': first_name,
             'username': email,
@@ -128,7 +144,7 @@ class DonorSignupView(View):
         msg = EmailMultiAlternatives(subject, msg_plain, from_email, [to_email])
         msg.attach_alternative(msg_html, "text/html")
         msg.send()
-        
+
         return JsonResponse(
             {
                 'status': 'success',
@@ -527,22 +543,27 @@ class CasePledgesView(LoginRequiredMixin, View):
             user = request.user
             pledge_amount = abs(float(request.POST['pledge_amt']))
             case = CaseDetail.objects.get(pk=kwargs['id'])
-            target_remaining = case.approved_amount - (case.casepledge_set.aggregate(sum=Sum('amount'))['sum'] or 0)
-            case_pledge, created = CasePledge.objects.update_or_create(
+            target_remaining = case.approved_amount - (
+                case.casepledge_set.aggregate(sum=Sum('amount'))['sum'] or 0
+            )
+            case_pledge, _ = CasePledge.objects.update_or_create(
                 case=case,
                 user=user,
-                defaults={'amount': min(
+                defaults={
+                    'amount': min(
                         target_remaining,
                         pledge_amount
                     )
                 }
             )
 
-            # Send account info to the donor 
-            subject = "You've pledged to help "+ " ".join([case.first_name, case.last_name])
+            # Send account info to the donor
+            subject = "You've pledged to help "+ " ".join(
+                [case.first_name, case.last_name]
+            )
             from_email = "www.helpinghands.gives<webmaster@helpinghands.gives>"
             to_email = user.email
-            
+
             context = {
                 'user': user,
                 'case': case,
@@ -560,7 +581,7 @@ class CasePledgesView(LoginRequiredMixin, View):
             msg = EmailMultiAlternatives(subject, msg_plain, from_email, [to_email])
             msg.attach_alternative(msg_html, "text/html")
             msg.send()
-                
+
             return JsonResponse(
                 {
                     'status': 'success',
@@ -610,3 +631,20 @@ class PledgeRemittancesView(LoginRequiredMixin, View):
                 },
                 status=500
             )
+
+class ArchiveListView(LoginRequiredMixin, View):
+    """ A view to showcase archived cases """
+
+    def get(self, request, *args, **kwargs):
+        """ Return a list of archived cases """
+        closed_cases = CaseDetail.objects.filter(status=5)\
+                .order_by('-created_at')
+        for case in closed_cases:
+            case.reason_label = CaseDetail.REASON_CHOICES[case.reason][1]
+        return render(
+            request,
+            'donations/donor/archivelist.html',
+            {
+                'cases': closed_cases
+            }
+        )
