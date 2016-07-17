@@ -640,7 +640,7 @@ class ArchiveListView(LoginRequiredMixin, View):
         closed_cases = CaseDetail.objects.filter(status=5)\
                 .order_by('-created_at')
         for case in closed_cases:
-            case.reason_label = CaseDetail.REASON_CHOICES[case.reason][1]
+            case.reason_label = CaseDetail.REASON_CHOICES[case.reason-1][1]
         return render(
             request,
             'donations/donor/archivelist.html',
