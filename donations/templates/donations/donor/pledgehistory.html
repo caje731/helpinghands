@@ -16,15 +16,20 @@ You haven't pledged to donate for any case yet
 			 </thead>
 	  		<tbody>
 		  		{% for p in request.user.casepledge_set.all %}
-				<tr>
-					<td>{{ p.case.id }}</td>
-					<td>{{ p.case.first_name }} {{ p.case.last_name }}</td>
-					<td>{{ p.amount }}</td>
-					<td>{{ p.remitted |yesno:"Yes,No,Maybe" }}</td>
-					<td>{{ p.txn_ref }}</td>
-					<td>{{ p.updated_at }}</td>
-					<td></td>
-				</tr>
+                    <tr>
+                        <td>{{ p.case.id }}</td>
+                        <td>
+                            <a href="/accounts/profile/?hist=1&hist_id={{ p.case.id }}">
+                                {{ p.case.first_name }} {{ p.case.last_name }}
+                            </a>
+                        </td>
+                        <td>{{ p.amount }}</td>
+                        <td>{{ p.remitted |yesno:"Yes,No,Maybe" }}</td>
+                        <td>{{ p.txn_ref }}</td>
+                        <td>{{ p.updated_at }}</td>
+                        <td></td>
+                    </tr>
+                </a>
 				{% endfor %}
 	  		</tbody>
 		</table>

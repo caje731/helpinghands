@@ -312,7 +312,9 @@ class ProfileView(LoginRequiredMixin, View):
             'STATUS_CHOICES': CaseDetail.CASE_STATUS_CHOICES,
             'ACC_TYPE_CHOICES': BankDetail.ACC_TYPE_CHOICES,
             'request': request,
-            'cases_page': request.GET.get('page') or 1
+            'cases_page': request.GET.get('page') or 1,
+            'hist': request.GET.get('hist'),
+            'hist_id': request.GET.get('hist_id'),
         }
         if request.user.profile.is_donor:
             return render(
@@ -510,7 +512,12 @@ class PaginatedCasesView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         """ Get all cases """
-        cases = CaseDetail.objects.filter(status=3)
+        is_historical = request.GET.get('hist')
+        historical_case_id = request.GET.get('hist_id')
+        if is_historical and bool(historical_case_id):
+            cases = CaseDetail.objects.filter(id=historical_case_id)
+        else:
+            cases = CaseDetail.objects.filter(status=3)
         paginator = Paginator(cases, 1) # Show 1 case per page
 
         page = request.GET.get('page')
