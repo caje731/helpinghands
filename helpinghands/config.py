@@ -40,7 +40,7 @@ def get_db_settings():
                 'ENGINE': 'django.db.backends.mysql',
                 'NAME': 'helpinghands',
                 'USER': 'root',
-                'PASSWORD': 'sqltoor',
+                'PASSWORD': 'root',
                 'HOST': '127.0.0.1',
                 'PORT': '3306',
             }

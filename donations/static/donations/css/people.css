@@ -2,6 +2,9 @@
 hr {
   border-radius: 15px;
 }
+div.col-md-4{
+  padding-bottom: 5px;
+}
 figure.snip1091 {
   font-family: 'Raleway', Arial, sans-serif;
   position: relative;
@@ -43,7 +46,8 @@ figure.snip1091 figcaption {
   transform-origin: center 0;
 }
 
-figure.snip1091 figcaption h2 {
+figure.snip1091 figcaption h2,
+figure.snip1091 figcaption h3{
   top: 50%;
   letter-spacing: -1px;
   color: #ffffff;
