@@ -146,8 +146,9 @@ class CasePledgeAdmin(dca.ModelAdmin):
     list_display = (
         'get_case_id',
         'get_case_recipient',
-        'user',
-        'get_user_email',
+        'get_donor_name',
+        'get_donor_email',
+        'get_donor_phone',
         'amount',
         'remitted',
         'updated_at',
@@ -158,7 +159,8 @@ class CasePledgeAdmin(dca.ModelAdmin):
     list_filter = ('case__id',)
 
     search_fields = ('case__id', 'case__first_name', 'case__last_name',
-                     'user__email', 'user__first_name')
+                     'user__email', 'user__first_name', 'user__last_name',
+                     'user__profile__cell_phone')
 
     def get_case_id(self, obj):
         """ Return ID of the case this pledge is for """
@@ -166,11 +168,28 @@ class CasePledgeAdmin(dca.ModelAdmin):
     get_case_id.admin_order_field = 'case__id'
     get_case_id.short_description = 'Case ID'
 
-    def get_user_email(self, obj):
+    def get_donor_email(self, obj):
         """ Return the email of the pledging user """
         return obj.user.email
-    get_user_email.admin_order_field = 'user__email'
-    get_user_email.short_description = 'Donor Email'
+    get_donor_email.admin_order_field = 'user__email'
+    get_donor_email.short_description = 'Donor Email'
+
+    def get_donor_name(self, obj):
+        """ Return the name of the pledging user """
+        return ' '.join(
+            [
+                obj.user.first_name,
+                obj.user.last_name,
+            ]
+        )
+    get_donor_name.admin_order_field = 'user__first_name'
+    get_donor_name.short_description = 'Donor Name'
+
+    def get_donor_phone(self, obj):
+        """Return the phone-number of the pledging user"""
+        return obj.user.profile.cell_phone
+    get_donor_phone.admin_order_field = 'user__profile__cell_phone'
+    get_donor_phone.short_description = 'Donor CellPhone'
 
     def get_case_recipient(self, obj):
         """ Return the recipient name for this pledge """
