@@ -202,9 +202,31 @@ class CasePledgeAdmin(dca.ModelAdmin):
     get_case_recipient.admin_order_field = 'case__first_name'
     get_case_recipient.short_description = 'Recipient'
 
+class ProfileAdmin(dca.ModelAdmin):
+    list_display = (
+        'registration_id',
+        'get_name',
+        'get_email',
+        'cell_phone',
+    )
 
+    def get_name(self, obj):
+        """Return the name of the user"""
+        return ' '.join([
+            obj.user.first_name,
+            obj.user.last_name,
+        ])
+    get_name.admin_order_field = 'user__first_name'
+    get_name.short_description = 'Name'
 
-dca.site.register(Profile)
+    def get_email(self, obj):
+        """Return the name of the user"""
+        return obj.user.email
+
+    get_email.admin_order_field = 'user__email'
+    get_email.short_description = 'Email'
+
+dca.site.register(Profile, ProfileAdmin)
 dca.site.register(CaseDetail, CaseDetailAdmin)
 dca.site.unregister(User)
 dca.site.register(User, CustomUserAdmin)
