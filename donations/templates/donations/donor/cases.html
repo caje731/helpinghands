@@ -30,6 +30,61 @@
             </tr>
         </table>
         <br><br>
+	{% if case.postclosure_gallery and case.status == 5 %}
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+			  <h3 class="panel-title">Post-Donation Photographs ({{ case.postclosure_gallery.photos.count }})</h3>
+		  </div>
+		  <div class="panel-body">
+		    <div class="container">
+			{% for photo in case.postclosure_gallery.photos.all %}
+			<div class="row" style="padding-top:10px;">
+			    <div class="col-md-7">
+				<a href="#">
+					<img class="img-responsive" src="{{ photo.image.url }}" alt="">
+				</a>
+			    </div>
+			    <div class="col-md-5">
+				<h3>{{ photo.title }}</h3>
+				<h4>Uploaded: {{ photo.date_added }}</h4>
+				<p>{{ photo.caption }}</p>
+			    </div>
+			</div>
+			<!-- /.row -->
+			{% endfor %}
+		    </div>
+		  </div>
+		</div>
+        <br><br>
+	{% endif %}
+	{% if case.preclosure_gallery %}
+
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Case Photographs ({{ case.preclosure_gallery.photos.count }})</h3>
+		  </div>
+		  <div class="panel-body">
+		    <div class="container">
+			{% for photo in case.preclosure_gallery.photos.all %}
+			<div class="row" style="padding-top:10px;">
+			    <div class="col-md-7">
+				<a href="#">
+					<img class="img-responsive" src="{{ photo.image.url }}" alt="">
+				</a>
+			    </div>
+			    <div class="col-md-5">
+				<h4>{{ photo.title }}</h4>
+				<h4>Uploaded: {{ photo.date_added }}</h4>
+				<p>{{ photo.caption }}</p>
+			    </div>
+			</div>
+			<!-- /.row -->
+			{% endfor %}
+		    </div>
+		  </div>
+		</div>
+        <br><br>
+	{% endif %}
         <table border=0 align="center">
             <tr>
                 <td style="width: 200px">Purpose of request:</td>
