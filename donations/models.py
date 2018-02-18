@@ -173,11 +173,13 @@ class CaseDetail(models.Model):
         Gallery,
         related_name='preclosure_casedetail',
         null=True,
+        on_delete=models.SET_NULL,
     )
     postclosure_gallery = models.OneToOneField(
         Gallery,
         related_name='postclosure_casedetail',
         null=True,
+        on_delete=models.SET_NULL,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
