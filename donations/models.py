@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.db.models import Sum
 from helpinghands import settings
+from photologue.models import Gallery
 
 import os, datetime, binascii
 # Create your models here.
@@ -168,6 +169,16 @@ class CaseDetail(models.Model):
         default=1
     )
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
+    preclosure_gallery = models.OneToOneField(
+        Gallery,
+        related_name='preclosure_casedetail',
+        null=True,
+    )
+    postclosure_gallery = models.OneToOneField(
+        Gallery,
+        related_name='postclosure_casedetail',
+        null=True,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

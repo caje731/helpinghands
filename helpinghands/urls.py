@@ -108,7 +108,10 @@ urlpatterns = [
     ),
 
     # Nested inlines
-    url(r'^nested_admin/', include('nested_admin.urls'))
+    url(r'^nested_admin/', include('nested_admin.urls')),
+
+    # django-photologue URLs
+    url(r'^photologue/', include('photologue.urls', namespace='photologue')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
