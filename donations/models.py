@@ -135,7 +135,12 @@ class BankDetail(models.Model):
     bank_name = models.CharField(max_length=255)
     branch_name = models.CharField(max_length=255)
     ifsc = models.CharField(verbose_name='IFSC', max_length=11)
-    cheque_copy = models.ImageField(max_length=255, upload_to=cheque_copy_upload_path)
+    cheque_copy = models.ImageField(
+        max_length=255,
+        upload_to=cheque_copy_upload_path,
+        null=True,
+        blank=True,
+    )
     case = models.OneToOneField(
         'CaseDetail',
         on_delete=models.CASCADE,
@@ -174,12 +179,14 @@ class CaseDetail(models.Model):
         related_name='preclosure_casedetail',
         null=True,
         on_delete=models.SET_NULL,
+        blank=True,
     )
     postclosure_gallery = models.OneToOneField(
         Gallery,
         related_name='postclosure_casedetail',
         null=True,
         on_delete=models.SET_NULL,
+        blank=True,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
