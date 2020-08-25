@@ -1,5 +1,7 @@
 """ Views for my precious """
 
+import logging
+
 from django.shortcuts import render
 from django.views.generic import View
 from django.contrib.auth.models import User
@@ -615,6 +617,8 @@ class PledgeRemittancesView(LoginRequiredMixin, View):
             case_pledge = CasePledge.objects.get(pk=kwargs['pledge_id'])
 
             case_pledge.remitted = request.POST['remitted']
+            if type(case_pledge.remitted) != bool:
+                case_pledge.remitted = ('true' == case_pledge.remitted)
             case_pledge.txn_ref = request.POST['txn_ref']
             case_pledge.save()
 
@@ -631,6 +635,7 @@ class PledgeRemittancesView(LoginRequiredMixin, View):
                 }
             )
         except Exception as e:
+            logging.exception('Remittance broke')
             return JsonResponse(
                 {
                     'status': 'failure',

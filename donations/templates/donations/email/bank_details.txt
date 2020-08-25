@@ -13,6 +13,7 @@ Account Type: 			{{ case.bankdetail.get_acc_type_display }}
 Bank Name: 				{{ case.bankdetail.bank_name }}
 Branch Name:			{{ case.bankdetail.branch_name }}
 IFS Code: 				{{ case.bankdetail.ifsc }}
+UPI Address: 		    {{ case.bankdetail.upi or 'Not Available'}}
 
 You are further required to take the following actions:
 1. Make an online remittance by adding the payee in your bank account or deposit cheque/cash into the bank account as per your convenience.

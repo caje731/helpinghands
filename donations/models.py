@@ -135,6 +135,7 @@ class BankDetail(models.Model):
     bank_name = models.CharField(max_length=255)
     branch_name = models.CharField(max_length=255)
     ifsc = models.CharField(verbose_name='IFSC', max_length=11)
+    upi = models.CharField(verbose_name='UPI Address', max_length=255)
     cheque_copy = models.ImageField(
         max_length=255,
         upload_to=cheque_copy_upload_path,
