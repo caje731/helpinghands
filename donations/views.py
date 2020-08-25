@@ -278,7 +278,7 @@ class DoneeSignupView(View):
         subject = "Welcome to HelpingHands"
         from_email = "www.helpinghands.gives<webmaster@helpinghands.gives>"
         to_email = email
-        
+
         context = {
             'name': first_name,
             'username': email,

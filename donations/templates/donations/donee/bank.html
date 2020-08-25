@@ -37,6 +37,12 @@
 	  <div class="col-md-10">
 	  	<input class="form-control" type="text" id="ifsc" value="{{ request.user.profile.bank_details.ifsc }}">
 	  </div>
+	</div>
+	<div class="form-group">
+	  <label class="control-label col-md-2" for="upi">UPI Address</label>
+	  <div class="col-md-10">
+	  	<input class="form-control" type="text" id="upi" value="{{ request.user.profile.bank_details.upi}}">
+	  </div>
 	</div><!-- 
 	<div class="form-group">
 		<label class="control-label col-md-2" for="cheque_copy">Cheque Copy</label>
@@ -65,6 +71,7 @@
 	<p>Bank Name: {{ request.user.profile.bank_details.bank_name }}</p>
 	<p>Branch Name: {{ request.user.profile.bank_details.branch_name }}</p>
 	<p>IFSC: {{request.user.profile.bank_details.ifsc}}</p>
+	<p>UPI Address: {{request.user.profile.bank_details.upi}}</p>
 	<!-- <img src="{{request.user.profile.bank_details.cheque_copy}}"/> -->
 	{% endif %}
 </div>
@@ -90,6 +97,7 @@
 		          	'bank_name': $('#bank_name')[0].value || null,
 		          	'branch_name': $('#branch_name')[0].value || null,
 		          	'ifsc': $('#ifsc')[0].value || null,
+		          	'upi': $('#upi')[0].value || null,
 		          	// 'cheque_copy': $('#cheque_copy')[0].value || null,
 		        },
 		        beforeSend: function( jqXHR, settingsObj ){
