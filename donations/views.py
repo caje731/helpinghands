@@ -164,7 +164,7 @@ def create_case(request):
             last_name=data['last_name'],
             reason=data['reason'],
             brief=data['brief'],
-            wish_amount=data['wish_amt'],
+            wish_amount=float(data['wish_amt']),
             created_by=request.user,
         )
 
