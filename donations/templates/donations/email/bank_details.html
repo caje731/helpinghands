@@ -38,7 +38,7 @@
     <p>Bank Name            : {{ case.bankdetail.bank_name }}</p>
     <p>Branch Name          : {{ case.bankdetail.branch_name }}</p>
     <p>IFS Code             : {{ case.bankdetail.ifsc }}</p>
-    <p>UPI Address          : {{ case.bankdetail.upi or 'Not Available'}}</p>
+    <p>UPI Address          : {{ case.bankdetail.upi|default:'Not Available'}}</p>
     
     <p>You are further required to take the following actions:
         <ul>
