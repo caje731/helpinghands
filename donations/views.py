@@ -598,6 +598,7 @@ class CasePledgesView(LoginRequiredMixin, View):
                 }
             )
         except Exception as e:
+            logging.exception('Pledging broke')
             return JsonResponse(
                 {
                     'status': 'failure',
