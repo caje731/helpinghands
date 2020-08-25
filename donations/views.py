@@ -190,6 +190,7 @@ def create_case(request):
             bank_name=data['bank_name'],
             branch_name=data['branch_name'],
             ifsc=data['ifsc'],
+            upi=data['upi'],
             case=case
         )
 
