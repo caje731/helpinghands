@@ -39,7 +39,7 @@
 	  </div>
 	</div>
 	<div class="form-group">
-	  <label class="control-label col-md-2" for="upi">UPI Address</label>
+	  <label class="control-label col-md-2" for="upi">UPI/GPay/PhonePe/Paytm</label>
 	  <div class="col-md-10">
 	  	<input class="form-control" type="text" id="upi" value="{{ request.user.profile.bank_details.upi}}">
 	  </div>
@@ -71,7 +71,7 @@
 	<p>Bank Name: {{ request.user.profile.bank_details.bank_name }}</p>
 	<p>Branch Name: {{ request.user.profile.bank_details.branch_name }}</p>
 	<p>IFSC: {{request.user.profile.bank_details.ifsc}}</p>
-	<p>UPI Address: {{request.user.profile.bank_details.upi}}</p>
+	<p>UPI/GPay/PhonePe/Paytm: {{request.user.profile.bank_details.upi}}</p>
 	<!-- <img src="{{request.user.profile.bank_details.cheque_copy}}"/> -->
 	{% endif %}
 </div>

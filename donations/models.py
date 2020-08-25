@@ -136,7 +136,7 @@ class BankDetail(models.Model):
     branch_name = models.CharField(max_length=255)
     ifsc = models.CharField(verbose_name='IFSC', max_length=11)
     upi = models.CharField(
-        verbose_name='UPI Address',
+        verbose_name='UPI/GPay/PhonePe/Paytm',
         max_length=255,
         null=True,
         blank=True,
