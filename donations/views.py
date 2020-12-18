@@ -190,7 +190,7 @@ def create_case(request):
             bank_name=data['bank_name'],
             branch_name=data['branch_name'],
             ifsc=data['ifsc'],
-            upi=data['upi'],
+            upi=data.get('upi'),
             case=case
         )
 
@@ -297,7 +297,7 @@ class DoneeSignupView(View):
         msg = EmailMultiAlternatives(subject, msg_plain, from_email, [to_email])
         msg.attach_alternative(msg_html, "text/html")
         msg.send()
-        
+
         return JsonResponse(
             {
                 'status': 'success',
